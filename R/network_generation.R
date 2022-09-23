@@ -20,6 +20,7 @@ create_unique_layer_node_ids <- function(identifiersA, identifiersB, layer_name)
     #' data frames with an additional column `node_id`. `both` contains all unique node IDs assigned
     #' across the network layer.
     #' 
+    #' @keywords internal
     #' @export
 
     ##### check if only 1 group given
@@ -117,6 +118,7 @@ generate_reduced_graph <- function(adjacency_matrix,
     #' 
     #' @return iGraph graph object of the reduced network.
     #' 
+    #' @keywords internal
     #' @export
 
     # network reduction
@@ -187,6 +189,7 @@ sample_size <- function(measurement_data, handling_missing_data) {
     #' @source Method to calculate samples in `pairwise.complete.obs` adopted and improved from
     #' \code{\link[WGCNA]{corAndPvalue}}
     #' 
+    #' @keywords internal
     #' @export
 
     if (handling_missing_data == 'all.obs') { n_samples <- dim(measurement_data)[1]

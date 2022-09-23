@@ -85,3 +85,4 @@ network). If no method is given, no reduction will be performed. When using the 
 `p_value` the user can specify an alpha significance value and a method for p-value adjustment.
 When using the reduction by `pickHardThreshold` a R^2 cutoff and a cut vector can be specified.
 }
+\keyword{internal}

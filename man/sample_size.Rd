@@ -30,3 +30,4 @@ of the original data is returned. If `pairwise.complete.obs` is specified the cr
 matrix indicating the non-NA values is returned as matrix. This implementation was adopted
 from \code{\link[WGCNA]{corAndPvalue}}.
 }
+\keyword{internal}

@@ -14,6 +14,7 @@ target_edge_list <- function(graph, target_nodes, group) {
     #' @return An edge list as a data frame.
     #' @importFrom rlang .data
     #' 
+    #' @keywords internal
     #' @export
 
     # filter for nodes contained in combined graph
@@ -57,6 +58,7 @@ find_targets <- function(graphs, target_molecules, interaction_table, annotation
     #' vector of node IDs that are their specific targets.
     #' @importFrom rlang .data
     #' 
+    #' @keywords internal
     #' @export
 
     # filter annotation for components that appear in the interaction table

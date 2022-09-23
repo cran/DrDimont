@@ -17,12 +17,4 @@ Character string vector containing error messages.
 [INTERNAL] Checks if the data used to define interaction between drugs and
 targets is valid and formatted correctly.
 }
-\examples{
-data(drug_gene_interactions)
-drug_target_interactions <- make_drug_target(
-                                 target_molecules='protein',
-                                 interaction_table=drug_gene_interactions,
-                                 match_on='gene_name')
-return_errors(check_drug_target(drug_target_interactions))
-
-}
+\keyword{internal}

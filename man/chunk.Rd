@@ -20,3 +20,4 @@ A list of chunks of length chunk_size
 \description{
 [INTERNAL] Create chunks from a vector for parallel computing
 }
+\keyword{internal}

@@ -23,3 +23,4 @@ An edge list as a data frame.
 list of edges that are directly adjacent to target nodes. These edges can be used for further
 computation to compute the integrated interaction scores and differential scores in the networks.
 }
+\keyword{internal}

@@ -39,21 +39,19 @@ data(layers_example)
 data(correlation_matrices_example)
 
 example_settings <- drdimont_settings(
-                       handling_missing_data=list(
-                              default="pairwise.complete.obs",
-                              mrna="all.obs"),
-                       reduction_method="pickHardThreshold",
-                       r_squared=list(default=0.65, metabolite=0.1),
-                       cut_vector=list(default=seq(0.2, 0.5, 0.01)),
-                       save_data=FALSE,
-                       python_executable="python")
+                        handling_missing_data=list(
+                            default="pairwise.complete.obs",
+                            mrna="all.obs"),
+                        reduction_method="pickHardThreshold",
+                        r_squared=list(default=0.65, metabolite=0.1),
+                        cut_vector=list(default=seq(0.2, 0.5, 0.01)))
 
-individual_graphs <- generate_individual_graphs(
-                             correlation_matrices=correlation_matrices_example,
-                             layers=layers_example, 
-                             settings=example_settings)
+example_individual_graphs <- generate_individual_graphs(
+                                 correlation_matrices=correlation_matrices_example,
+                                 layers=layers_example, 
+                                 settings=example_settings)
 
-graph_metrics(individual_graphs$graphs$groupA$mrna)
-graph_metrics(individual_graphs$graphs$groupB$mrna)
+graph_metrics(example_individual_graphs$graphs$groupA$mrna)
+graph_metrics(example_individual_graphs$graphs$groupB$mrna)
 
 }

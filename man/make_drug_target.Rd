@@ -33,8 +33,9 @@ calculated for all the supplied drugs in \code{interaction_table}.
 }
 \examples{
 data(drug_gene_interactions)
-drug_target_interactions <- make_drug_target(target_molecules='protein',
-                                            interaction_table=drug_gene_interactions,
-                                            match_on='gene_name')
+
+example_drug_target_interactions <- make_drug_target(target_molecules='protein',
+                                        interaction_table=drug_gene_interactions,
+                                        match_on='gene_name')
 
 }

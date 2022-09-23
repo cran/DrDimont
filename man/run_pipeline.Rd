@@ -39,16 +39,20 @@ is returned instead.
 This wrapper function executes all necessary steps to generate differential integrated
 drug response scores from the formatted input data. The following input data is required
 (and detailed below):
+
 * Layers of stratified molecular data.
+
 * Additional connections between the layers.
+
 * Interactions between drugs and nodes in the network.
+
 * Settings for pipeline execution.
 
 As this function runs through all steps of the DrDimont pipeline it can take a long time to complete,
 especially if the supplied molecular data is rather large. Several prompts will be printed to supply
 information on how the pipeline is proceeding. Calculation of the interaction score by
 \code{\link[DrDimont]{generate_interaction_score_graphs}} requires saving large-scale graphs to file and calling
-a python script. This handover may take time.
+a Python script. This handover may take time.
 
 Eventually a data frame is returned containing the supplied drug name and its associated
 differential drug response score computed by DrDimont.
@@ -62,33 +66,31 @@ data(metabolite_protein_interactions)
 data(layers_example)
 
 example_inter_layer_connections = list(make_connection(from='mrna', to='protein',
-                                               connect_on='gene_name', weight=1),
-                               make_connection(from='protein', to='phosphosite',
-                                               connect_on='gene_name', weight=1),
-                               make_connection(from='protein', to='metabolite',
-                                               connect_on=metabolite_protein_interactions,
-                                               weight='combined_score'))
+                                           connect_on='gene_name', weight=1),
+                                       make_connection(from='protein', to='phosphosite',
+                                           connect_on='gene_name', weight=1),
+                                       make_connection(from='protein', to='metabolite',
+                                           connect_on=metabolite_protein_interactions,
+                                           weight='combined_score'))
 
 example_drug_target_interactions <- make_drug_target(target_molecules='protein',
-                                 interaction_table=drug_gene_interactions,
-                                 match_on='gene_name')
+                                        interaction_table=drug_gene_interactions,
+                                        match_on='gene_name')
 
 example_settings <- drdimont_settings(
-                       handling_missing_data=list(
-                              default="pairwise.complete.obs",
-                              mrna="all.obs"),
-                       reduction_method="pickHardThreshold",
-                       r_squared=list(default=0.65, metabolite=0.1),
-                       cut_vector=list(default=seq(0.2, 0.65, 0.01)),
-                       save_data=FALSE,
-                       python_executable="python")
+                        handling_missing_data=list(
+                            default="pairwise.complete.obs",
+                            mrna="all.obs"),
+                        reduction_method="pickHardThreshold",
+                        r_squared=list(default=0.65, metabolite=0.1),
+                        cut_vector=list(default=seq(0.2, 0.65, 0.01)))
 
 \donttest{
 run_pipeline(
-     layers=layers_example, 
-     inter_layer_connections=example_inter_layer_connections, 
-     drug_target_interactions=example_drug_target_interactions, 
-     settings=example_settings)
+    layers=layers_example, 
+    inter_layer_connections=example_inter_layer_connections, 
+    drug_target_interactions=example_drug_target_interactions, 
+    settings=example_settings)
 }
 
 }

@@ -18,3 +18,4 @@ Returns the layer along with layer names
 [INTERNAL] Get a layer by its name from a layer object 
 created with \code{\link[DrDimont]{make_layer}}, e.g., \code{\link{layers_example}}.
 }
+\keyword{internal}

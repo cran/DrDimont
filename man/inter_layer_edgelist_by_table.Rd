@@ -28,3 +28,4 @@ Data frame with columns from, to and weight
 based on an
 interaction table supplied by the user.
 }
+\keyword{internal}

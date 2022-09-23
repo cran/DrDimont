@@ -28,3 +28,4 @@ No return value, used internally
 passing them to the python interaction score script.
 Graphs are saved as `gml` file. Edge lists are saved as `tsv` file.
 }
+\keyword{internal}

@@ -21,3 +21,4 @@ Setting value(s) for this layer (and group)
 \description{
 Returns specified setting for a specific network layer (and group).
 }
+\keyword{internal}

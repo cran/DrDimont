@@ -2,7 +2,7 @@
 % Please edit documentation in R/checks.R
 \name{return_errors}
 \alias{return_errors}
-\title{Return detected errors}
+\title{Return detected errors in the input data}
 \usage{
 return_errors(errors)
 }
@@ -17,7 +17,27 @@ Throws an error in case errors have been passed to the function. Messages
 describing the detected errors are printed.
 }
 \examples{
-layer <- DrDimont::layers_example[[2]]
-return_errors(check_layer(layer))
+data(layers_example)
+data(metabolite_protein_interactions)
+data(drug_gene_interactions)
+data
+
+all_layers <- layers_example
+
+all_inter_layer_connections = list(
+    make_connection(from='mrna', to='protein', connect_on='gene_name', weight=1),
+    make_connection(from='protein', to='phosphosite', connect_on='gene_name', weight=1),
+    make_connection(from='protein', to='metabolite',
+    connect_on=metabolite_protein_interactions, weight='combined_score'))
+
+all_drug_target_interactions <- make_drug_target(
+                                    target_molecules="protein",
+                                    interaction_table=drug_gene_interactions,
+                                    match_on="gene_name")
+
+return_errors(check_input(layers=all_layers,
+    inter_layer_connections=all_inter_layer_connections,
+    drug_target_interactions=all_drug_target_interactions))
+
 
 }

@@ -20,13 +20,4 @@ Character string vector containing error messages.
 [INTERNAL] Checks if the parameters supplied in 'drug_target_interactions' makes
 sense in the context of the defined layers.
 }
-\examples{
-data(layers_example)
-data(drug_gene_interactions)
-drug_target_interactions <- make_drug_target(
-                                 target_molecules='protein',
-                                 interaction_table=drug_gene_interactions,
-                                 match_on='gene_name')
-return_errors(check_drug_targets_in_layers(drug_target_interactions, layers_example))
-
-}
+\keyword{internal}

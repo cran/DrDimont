@@ -9,7 +9,6 @@ calculate_interaction_score(
   total_edges,
   saving_path,
   conda = FALSE,
-  python_executable = "python",
   script_path = NULL,
   int_score_mode = "auto",
   cluster_address = "auto",
@@ -27,11 +26,7 @@ Default is current working directory. Directory to use for writing intermediate 
 when passing input and  output between Python and R.}
 
 \item{conda}{[bool] Specifying if python is installed in a conda environment. Set TRUE if python is installed
-with conda. Use \code{python_executable="-n name-of-your-environment python"} (change name-of-your-environment to
-your environment) or \code{python_executable="python"} if installed in base environment. (default: FALSE)}
-
-\item{python_executable}{[string] Path to Python executable used for generating the interaction score graphs.
-(default: "python")}
+with conda, else python dependencies are assumed to be installed with pip. (default: FALSE)}
 
 \item{script_path}{[string] Path to the interaction score Python script. Set NULL to use package
 internal script (default).}
@@ -59,3 +54,4 @@ alternate script can be specified with `script_path`.
 The score for an edge is computed as the sum of the average product of weights along all simple
 paths of length l (over all path lengths up to `max_path_length`) between the source and target node of the edge.
 }
+\keyword{internal}

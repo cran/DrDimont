@@ -1,6 +1,6 @@
 drdimont_settings <- function(
                         ### saving
-                        saving_path = 'tempdir()',
+                        saving_path = tempdir(),
                         save_data = FALSE,
                         ### network generation
                         correlation_method = "spearman",
@@ -19,11 +19,10 @@ drdimont_settings <- function(
                         parallel_chunk_size = 10^6,
                         print_graph_info = TRUE,
                         ### interaction_score
-                        python_executable = "python",
                         conda = FALSE,
                         max_path_length = 3,
                         int_score_mode = "auto",
-                        cluster_address = "None",
+                        cluster_address = "auto",
                         ### drug response score
                         median_drug_response=FALSE,
                         absolute_difference=FALSE,
@@ -31,21 +30,23 @@ drdimont_settings <- function(
 
     #' @title Create global settings variable for DrDimont pipeline
     #'
-    #' @description Function that allows creating a global `settings` variable used in the
-    #' \code{\link[DrDimont]{run_pipeline}} function and the step-wise DrDimont execution.
+    #' @description Allows creating a global `settings` variable used in DrDimont's
+    #' \code{\link[DrDimont]{run_pipeline}} function and step-wise execution.
     #' Default parameters can be changed within the function call.
     #'
-    #' @param correlation_method ["pearson"|"spearman"|"kendall"] Correlation method used
-    #' for graph generation. Argument is passed to \code{\link[WGCNA]{cor}}. (default: spearman)
-    #' @param handling_missing_data ["all.obs"|"pairwise.complete.obs"] Specifying the handling
-    #' of missing data during correlation matrix computation. Argument is passed to \code{\link[WGCNA]{cor}}.
-    #' Can be a single character string if the same for all layers, else a named list mapping layer names
-    #' to methods, e.g, \code{handling_missing_data=list(mrna="all.obs", protein="pairwise.complete.obs")}.
+    #' @param correlation_method ["pearson"|"spearman"|"kendall"] 
+    #' Correlation method used for graph generation. Argument is passed to \code{\link[WGCNA]{cor}}. 
+    #' (default: spearman)
+    #' @param handling_missing_data ["all.obs"|"pairwise.complete.obs"] 
+    #' Method for handling of missing data during correlation matrix computation. Argument is passed 
+    #' to \code{\link[WGCNA]{cor}}. Can be a single character string if the same for all layers, else 
+    #' a named list mapping layer names to methods, e.g, 
+    #' \code{handling_missing_data=list(mrna="all.obs", protein="pairwise.complete.obs")}.
     #' Layers may be omitted if a method is mapped to `default`, e.g,
-    #' handling_missing_data=list(default="pairwise.complete.obs"). (default: all.obs)
+    #' \code{handling_missing_data=list(default="pairwise.complete.obs")}. (default: all.obs)
     #'
-    #' @param print_graph_info [bool] Specifying if a summary of the reduced graph should be printed to
-    #' the console after network generation. (default: TRUE)
+    #' @param print_graph_info [bool] 
+    #' Print summary of the reduced graph to the console after network generation. (default: TRUE)
     #'
     #' @param reduction_method ["pickHardThreshold"|"p_value"]
     #' Reduction method for reducing networks. `p_value` for hard thresholding based on the statistical
@@ -55,77 +56,98 @@ drdimont_settings <- function(
     #' Layers may be omitted if a method is mapped to `default`. (default: pickHardThreshold)
     #'
     #' @param r_squared_cutoff pickHardThreshold setting: [float|named list]
-    #' A number indicating the desired minimum scale free topology fitting index R^2 for reduction using
+    #' Minimum scale free topology fitting index R^2 for reduction using
     #' \code{\link[WGCNA]{pickHardThreshold}}.
     #' Can be a single float number if the same for all layers, else a named list mapping layer names to a cutoff
     #' (see \code{handling_missing_data} setting) or a named list in a named list mapping groupA or groupB and layer
-    #' names to a cutoff, e.g., \code{r_squared_cutoff=list(groupA=list(mrna=0.85, protein=0.8), groupB=list(mrna=0.9, protein=0.85))}.
+    #' names to a cutoff, e.g., 
+    #' \code{r_squared_cutoff=list(groupA=list(mrna=0.85, protein=0.8), groupB=list(mrna=0.9, protein=0.85))}.
     #' Layers/groups may be omitted if a cutoff is mapped to `default`. (default: 0.85)
     #' @param cut_vector pickHardThreshold setting: [sequence of float|named list]
-    #' A vector of hard threshold cuts for which the scale free topology fit indices are to be calculated during
+    #' Vector of hard threshold cuts for which the scale free topology fit indices are calculated during
     #' reduction with \code{\link[WGCNA]{pickHardThreshold}}.
-    #' Can be a single regular sequence if the same for all layers, else a
-    #' named list mapping layer names to a cut vector or a named list in a named list mapping groupA or groupB and layer
-    #' names to a cut vector (see \code{r_squared_cutoff} setting). Layers/groups may be omitted if a vector is mapped
+    #' Can be a single regular sequence if the same for all layers, else a named list mapping layer names 
+    #' to a cut vector or a named list in a named list mapping groupA or groupB and layer names to a cut 
+    #' vector (see \code{r_squared_cutoff} setting). Layers/groups may be omitted if a vector is mapped
     #' to `default`. (default: seq(0.2, 0.8, by = 0.01))
-    #' @param mean_number_edges pickHardThreshold setting: [int|named list] Find a suitable edge weight cutoff employing
+    #' @param mean_number_edges pickHardThreshold setting: [int|named list] 
+    #' Maximal mean number edges threshold to find a suitable edge weight cutoff employing
     #' \code{\link[WGCNA]{pickHardThreshold}} to reduce the network to at most the specified mean number of edges.
     #' Can be a single int number if the same for all layers, else a named list mapping layer names to a mean number of edges or
     #' a named list in a named list mapping groupA or groupB and layer names to a cutoff (see \code{r_squared_cutoff} setting).
     #' Attention: This parameter overwrites the 'r_squared_cutoff' and 'edge_density' parameters if not set to NULL. (default: NULL)
-    #' @param edge_density pickHardThreshold setting: [float|named list] Find a suitable edge weight cutoff employing
+    #' @param edge_density pickHardThreshold setting: [float|named list] 
+    #' Maximal network edge density to find a suitable edge weight cutoff employing
     #' \code{\link[WGCNA]{pickHardThreshold}} to reduce the network to at most the specified edge density.
     #' Can be a single float number if the same for all layers, else a named list mapping layer names to a mean number of edges or
     #' a named list in a named list mapping groupA or groupB and layer names to a cutoff (see \code{r_squared_cutoff} setting).
     #' Attention: This parameter overwrites the 'r_squared_cutoff' parameter if not set to NULL. (default: NULL)
     #'
-    #' @param p_value_adjustment_method p_value setting: ["holm"|"hochberg"|"hommel"|"bonferroni"|"BH"|"BY"|"fdr"|"none"] String
-    #' of the correction method applied to p-values. Passed to \link[stats]{p.adjust}. (default: "BH")
-    #' @param reduction_alpha p_value setting: [float] A number indicating the significance value for correlation p-values
+    #' @param p_value_adjustment_method p_value setting: ["holm"|"hochberg"|"hommel"|"bonferroni"|"BH"|"BY"|"fdr"|"none"]
+    #' Correction method applied to p-values. Passed to \link[stats]{p.adjust}. (default: "BH")
+    #' @param reduction_alpha p_value setting: [float] 
+    #' Significance value for correlation p-values
     #' during reduction. Not-significant edges are dropped. (default: 0.05)
-    #' @param n_threads p_value setting: [int] Number of threads for parallel computation of p-values during p-value reduction.
-    #' (default: 1)
-    #' @param parallel_chunk_size p_value setting: [int] Number of p-values in smallest work unit when computing in parallel
+    #' @param n_threads p_value setting: [int] 
+    #' Number of threads for parallel computation of p-values during p-value reduction. (default: 1)
+    #' @param parallel_chunk_size p_value setting: [int] 
+    #' Number of p-values in smallest work unit when computing in parallel
     #' during network reduction with method `p_value`. (default: 10^6)
     #'
-    #' @param python_executable [string] Path to Python executable used for generating the interaction score graphs.
-    #' (default: "python")
-    #' @param conda [bool] Specifying if python is installed in a conda environment. Set TRUE if python is installed
-    #' with conda. Use \code{python_executable="-n name-of-your-environment python"} (change name-of-your-environment to
-    #' your environment) or \code{python_executable="python"} if installed in base environment. (default: FALSE)
-    #' @param max_path_length [int] Integer of maximum length of simple paths to include in the
+    #' @param conda [bool] 
+    #' Python installation in conda environment. Set TRUE if Python is installed with conda. (default: FALSE)
+    #' @param max_path_length [int] 
+    #' Integer of maximum length of simple paths to include in the
     #' \code{\link[DrDimont]{generate_interaction_score_graphs}} computation. (default: 3)
-    #' @param int_score_mode ["auto"|"sequential"|"ray"] Whether to compute interaction
-    #' score in parallel using the Ray python library or sequentially. When `auto` it depends on the
-    #' graph sizes. (default: "auto")
+    #' @param int_score_mode ["auto"|"sequential"|"ray"] 
+    #' Interaction score sequential or parallel ("ray") computation. For parallel computation the Python library Ray ist used. 
+    #' When set to `auto` computation depends on the  graph sizes. (default: "auto")
     #' @param cluster_address [string] Local node IP-address of Ray if executed on a cluster.
     #' On a cluster: Start ray with \code{ray start --head --num-cpus 32} on the console before DrDimont execution.
-    #' It should work with "auto", if it does not specifiy IP-address given by the \code{ray start} command. (default: "auto")
+    #' It should work with "auto", if it does not specify IP-address given by the \code{ray start} command. (default: "auto")
     #'
-    #' @param median_drug_response [bool] Specifying if the median instead of the mean of a drug's targets differential
-    #' scores should be computed (default: FALSE)
-    #' @param absolute_difference [bool] Specifying if the absoulte differential scores instead of the actual differential
-    #' scores should be used for drug response computation (default: FALSE)
+    #' @param median_drug_response [bool] 
+    #' Computation of median (instead of mean) of a drug's targets differential scores (default: FALSE)
+    #' @param absolute_difference [bool] 
+    #' Computation of drug response scores based on absolute differential scores (instead of the actual differential
+    #' scores) (default: FALSE)
     #'
-    #' @param saving_path [string] Path to save intermediate output of DrDimont's functions. Default is current working directory.
-    #' @param save_data [bool] Specifying if intermediate data such as correlation_matrices, individual_graphs, etc.
-    #' should be saved during \code{\link[DrDimont]{run_pipeline}}. (default: TRUE)
+    #' @param saving_path [string] Path to save intermediate output of DrDimont's functions. Default is temporary folder.
+    #' @param save_data [bool] 
+    #' Save intermediate data such as correlation_matrices, individual_graphs, etc. during exectution of DrDimont. (default: FALSE)
     #' @param ... Supply additional settings.
     #'
-    #' @return Named list of settings
+    #' @return Named list of the settings for the pipeline
     #'
     #' @examples
     #' settings <- drdimont_settings(
-    #'                      correlation_method="spearman",
-    #'                      handling_missing_data=list(
-    #'                                default="pairwise.complete.obs",
-    #'                                mrna="all.obs"),
-    #'                      reduction_method="pickHardThreshold",
-    #'                      max_path_length=3)
+    #'                 correlation_method="spearman",
+    #'                 handling_missing_data=list(
+    #'                     default="pairwise.complete.obs",
+    #'                     mrna="all.obs"),
+    #'                 reduction_method="pickHardThreshold",
+    #'                 max_path_length=3)
     #' 
     #' @export
     
     settings <- c(as.list(environment()), list(...))
+    
+    ### check if python installed, return error if not
+    if(settings$conda){
+        tryCatch({reticulate::conda_python('r-DrDimont')},
+                 warning = function(e) {
+                     message(format(Sys.time(), "[%y-%m-%d %X] "), 
+                             "WARNING: Python executable in conda environment 'r-DrDimont' not found. Either run `install_python_dependencies(package_manager='conda') or set `conda=FALSE` in `drdimont_settings()` if pip installation was used.")
+                 }
+        )
+    }
+    else{
+        if(!reticulate::virtualenv_exists('r-DrDimont')) {
+            message(format(Sys.time(), "[%y-%m-%d %X] "), 
+                    "WARNING: Python executable in virtual environment 'r-DrDimont' not found. Either run `install_python_dependencies(package_manager='pip') or set `conda=TRUE` in `drdimont_settings()` if conda installation was used.")
+        }
+    }
+
     return(settings)
 
 }
@@ -141,6 +163,7 @@ get_layer_setting <- function(layer, group, settings, setting_name) {
     #' @param setting_name [string] String indicating the setting to return.
     #' @return Setting value(s) for this layer (and group)
     #' 
+    #' @keywords internal
     #' @export
     
     if (!is.list(settings[[setting_name]])) {return(settings[[setting_name]])}

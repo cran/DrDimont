@@ -45,3 +45,4 @@ of several methods. A significance threshold `alpha` can be set. All value entri
 initial adjacency matrix will be set to NA. If a default cluster is registered with the `parallel` package the
 computation will happen in parallel automatically.
 }
+\keyword{internal}

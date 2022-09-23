@@ -38,18 +38,16 @@ Finds node IDs of network nodes in `graphs` that are targeted by a drug in
 data(drug_gene_interactions)
 data(combined_graphs_example)
 
-example_settings <- drdimont_settings(
-                       save_data=FALSE,
-                       python_executable="python")
+example_settings <- drdimont_settings()
 
 example_drug_target_interactions <- make_drug_target(target_molecules='protein',
-                                            interaction_table=drug_gene_interactions,
-                                            match_on='gene_name')
+                                        interaction_table=drug_gene_interactions,
+                                        match_on='gene_name')
 
-drug_target_edges <- determine_drug_targets(
-                           graphs=combined_graphs_example$graphs,
-                           annotations=combined_graphs_example$annotations,
-                           drug_target_interactions=example_drug_target_interactions,
-                           settings=example_settings)
+example_drug_target_edges <- determine_drug_targets(
+                                 graphs=combined_graphs_example$graphs,
+                                 annotations=combined_graphs_example$annotations,
+                                 drug_target_interactions=example_drug_target_interactions,
+                                 settings=example_settings)
 
 }

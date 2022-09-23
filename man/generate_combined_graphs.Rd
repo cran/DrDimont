@@ -45,21 +45,19 @@ data(individual_graphs_example)
 data(metabolite_protein_interactions)
 
 example_inter_layer_connections = list(make_connection(from='mrna', to='protein',
-                                               connect_on='gene_name', weight=1),
-                               make_connection(from='protein', to='phosphosite',
-                                               connect_on='gene_name', weight=1),
-                               make_connection(from='protein', to='metabolite',
-                                               connect_on=metabolite_protein_interactions,
-                                               weight='combined_score'))
+                                           connect_on='gene_name', weight=1),
+                                       make_connection(from='protein', to='phosphosite',
+                                           connect_on='gene_name', weight=1),
+                                       make_connection(from='protein', to='metabolite',
+                                           connect_on=metabolite_protein_interactions,
+                                           weight='combined_score'))
 
-example_settings <- drdimont_settings(
-                       save_data=FALSE,
-                       python_executable="python")
+example_settings <- drdimont_settings()
 
-combined_graphs <- generate_combined_graphs(
-                           graphs=individual_graphs_example$graphs,
-                           annotations=individual_graphs_example$annotations,
-                           inter_layer_connections=example_inter_layer_connections,
-                           settings=example_settings)
+example_combined_graphs <- generate_combined_graphs(
+                               graphs=individual_graphs_example$graphs,
+                               annotations=individual_graphs_example$annotations,
+                               inter_layer_connections=example_inter_layer_connections,
+                               settings=example_settings)
 
 }

@@ -38,3 +38,4 @@ vector of node IDs that are their specific targets.
 annotation this function returns a data frame containing nodes in the network targeted by a
 drug and a list containing the drug names as names and a vector of node IDs as keys.
 }
+\keyword{internal}

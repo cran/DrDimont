@@ -21,3 +21,4 @@ input vector.
 \description{
 [INTERNAL] Create chunks from two vectors for parallel computing
 }
+\keyword{internal}

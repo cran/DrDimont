@@ -20,3 +20,4 @@ Data frame with columns from, to and weight
 \description{
 [INTERNAL] Returns an edge list defining the connections between two layers of the network.
 }
+\keyword{internal}

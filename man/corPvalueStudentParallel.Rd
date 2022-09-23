@@ -21,3 +21,4 @@ Vector of p-values for upper triangle
 \description{
 [INTERNAL] Compute p-values for upper triangle of correlation matrix in parallel
 }
+\keyword{internal}

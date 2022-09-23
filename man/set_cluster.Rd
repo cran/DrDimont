@@ -16,3 +16,4 @@ No return value, called internally to create cluster
 [INTERNAL] Helper function to create and register a cluster for parallel
 computation of p-value reduction
 }
+\keyword{internal}

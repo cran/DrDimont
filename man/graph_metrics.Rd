@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{graph_metrics}
 \alias{graph_metrics}
-\title{Analysis of metrics of an iGraph object}
+\title{[INTERNAL] Analysis of metrics of an iGraph object}
 \usage{
 graph_metrics(graph, verbose = TRUE, return = FALSE)
 }
@@ -18,13 +18,7 @@ Named list of metrics including vertex count, edge count, number of components,
 size of largest component and the relative frequency of zero degree vertices.
 }
 \description{
-This helper function prints or returns multiple metrics of arbitrary
+[INTERNAL] This helper function prints or returns multiple metrics of arbitrary
 iGraph graph object.
 }
-\examples{
-adj_mat <- matrix(rnorm(36), nrow=6)
-graph <- igraph::graph_from_adjacency_matrix(adj_mat)
-DrDimont::graph_metrics(graph, verbose=TRUE, return=FALSE)
-
-
-}
+\keyword{internal}

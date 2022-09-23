@@ -11,6 +11,7 @@ inter_layer_edgelist_by_id <- function(annotation_A, annotation_B, connection, w
     #' @return Data frame with columns from, to and weight
     #' @importFrom rlang .data
     #' 
+    #' @keywords internal
     #' @export
 
     inter_graph <- annotation_A %>%
@@ -40,6 +41,7 @@ inter_layer_edgelist_by_table <- function(annotation_A,
     #' @return Data frame with columns from, to and weight
     #' @importFrom rlang .data
     #' 
+    #' @keywords internal
     #' @export
 
     id.x <- intersect(colnames(annotation_A), colnames(interaction_table))[1]
@@ -64,6 +66,7 @@ combine_graphs <- function(graphs, inter_layer_edgelists) {
     #'
     #' @return iGraph object which is the union of the input graphs with isolated nodes removed.
     #' 
+    #' @keywords internal
     #' @export
 
     all_inter_layer_edges <- dplyr::bind_rows(inter_layer_edgelists)

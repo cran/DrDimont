@@ -27,12 +27,10 @@ is computed by \code{\link[DrDimont]{generate_interaction_score_graphs}}.
 \examples{
 data(interaction_score_graphs_example)
 
-example_settings <- drdimont_settings(
-                       save_data=FALSE,
-                       python_executable="python")
+example_settings <- drdimont_settings()
 
-differential_score_graph <- generate_differential_score_graph(
-                                  interaction_score_graphs=interaction_score_graphs_example,
-                                  settings=example_settings)
+example_differential_score_graph <- generate_differential_score_graph(
+                                        interaction_score_graphs=interaction_score_graphs_example,
+                                        settings=example_settings)
 
 }

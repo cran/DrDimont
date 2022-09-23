@@ -17,3 +17,4 @@ iGraph object which is the union of the input graphs with isolated nodes removed
 \description{
 [INTERNAL] Creates the union of all graphs and adds the inter-layer edges.
 }
+\keyword{internal}

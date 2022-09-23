@@ -15,3 +15,4 @@ computation to clean the state. If a cluster is registered, this functions
 stops it and removes corresponding connections. Ignores errors. Has no effect 
 if no cluster is registered.
 }
+\keyword{internal}

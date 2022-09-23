@@ -14,6 +14,7 @@ write_interaction_score_input <- function(combined_graphs, drug_target_edgelists
     #'
     #' @return No return value, used internally
     #' 
+    #' @keywords internal
     #' @export
 
     # iterate over groups
@@ -31,7 +32,6 @@ calculate_interaction_score <- function(max_path_length,
                                         total_edges,
                                         saving_path,
                                         conda=FALSE,
-                                        python_executable="python",
                                         script_path=NULL,
                                         int_score_mode="auto",
                                         cluster_address="auto",
@@ -54,10 +54,7 @@ calculate_interaction_score <- function(max_path_length,
     #' Default is current working directory. Directory to use for writing intermediate data
     #' when passing input and  output between Python and R.
     #' @param conda [bool] Specifying if python is installed in a conda environment. Set TRUE if python is installed
-    #' with conda. Use \code{python_executable="-n name-of-your-environment python"} (change name-of-your-environment to
-    #' your environment) or \code{python_executable="python"} if installed in base environment. (default: FALSE)
-    #' @param python_executable [string] Path to Python executable used for generating the interaction score graphs.
-    #' (default: "python")
+    #' with conda, else python dependencies are assumed to be installed with pip. (default: FALSE)
     #' @param script_path [string] Path to the interaction score Python script. Set NULL to use package
     #' internal script (default).
     #' @param int_score_mode ["auto"|"sequential"|"ray"] Whether to compute interaction
@@ -70,13 +67,14 @@ calculate_interaction_score <- function(max_path_length,
     #'
     #' @return Does not return anything, instead calls Python script which outputs `gml` files
     #' 
+    #' @keywords internal
     #' @export
 
     py_script <- ifelse(is.null(script_path), system.file("python_igraph_interaction_score.py", package = "DrDimont"), script_path)
-    graph_file_groupA <- paste0(saving_path, '/combined_graph_groupA.gml')
-    graph_file_groupB <- paste0(saving_path, '/combined_graph_groupB.gml')
-    edgelist_file_groupA <- paste0(saving_path, '/drug_target_edgelist_groupA.tsv')
-    edgelist_file_groupB <- paste0(saving_path, '/drug_target_edgelist_groupB.tsv')
+    graph_file_groupA <- paste0(saving_path, "/combined_graph_groupA.gml")
+    graph_file_groupB <- paste0(saving_path, "/combined_graph_groupB.gml")
+    edgelist_file_groupA <- paste0(saving_path, "/drug_target_edgelist_groupA.tsv")
+    edgelist_file_groupB <- paste0(saving_path, "/drug_target_edgelist_groupB.tsv")
     group_is_large <- total_edges > 2000000
     use_ray <- ifelse(group_is_large, int_score_mode == "ray", !(int_score_mode == "sequential"))
     groups <- c("groupA", "groupB")
@@ -94,49 +92,30 @@ calculate_interaction_score <- function(max_path_length,
         }
     }
 
-    if (!conda) {
-        res <- system2(python_executable, args = c(py_script,
-                                                   graph_file_groupA,
-                                                   edgelist_file_groupA,
-                                                   max_path_length,
-                                                   '--output', paste0(saving_path, '/int_score_graph_groupA.gml'),
-                                                   "--cluster_address", cluster_address,
-                                                   ifelse(use_ray[1], "--distributed", "")))
+    if (conda) {
+        python_executable=reticulate::conda_python(envname='r-DrDimont')
     } else {
-        res <- system2('conda', args = c('run',
-                                         python_executable,
-                                         py_script,
-                                         graph_file_groupA,
-                                         edgelist_file_groupA,
-                                         max_path_length,
-                                         '--output', paste0(saving_path, '/int_score_graph_groupA.gml'),
-                                         "--cluster_address", cluster_address,
-                                         ifelse(use_ray[1], "--distributed", "")))
+        python_executable=reticulate::virtualenv_python(envname="r-DrDimont")
     }
+    res <- system2(python_executable, args = c(py_script,
+                                               graph_file_groupA,
+                                               edgelist_file_groupA,
+                                               max_path_length,
+                                               "--output", paste0(saving_path, "/int_score_graph_groupA.gml"),
+                                               "--cluster_address", cluster_address,
+                                               ifelse(use_ray[1], "--distributed", "")))
     if (res == 0) {message(format(Sys.time(), "[%y-%m-%d %X] "), "Computation of interaction scores for groupA was successful!")}
 
 
     if (!graphB_null){
-        if (!conda) {
-            res <- system2(python_executable, args = c(py_script,
-                                                        graph_file_groupB,
-                                                        edgelist_file_groupB,
-                                                        max_path_length,
-                                                        '--output', paste0(saving_path, '/int_score_graph_groupB.gml'),
-                                                        "--cluster_address", cluster_address,
-                                                        ifelse(use_ray[2], "--distributed", "")
-                                                        ))
-        } else {
-            res <- system2('conda', args = c('run',
-                                                python_executable,
-                                                py_script,
-                                                graph_file_groupB,
-                                                edgelist_file_groupB,
-                                                max_path_length,
-                                                '--output', paste0(saving_path, '/int_score_graph_groupB.gml'),
-                                                "--cluster_address", cluster_address,
-                                                ifelse(use_ray[1], "--distributed", "")))
-        }
+        res <- system2(python_executable, args = c(py_script,
+                                                   graph_file_groupB,
+                                                   edgelist_file_groupB,
+                                                   max_path_length,
+                                                   '--output', paste0(saving_path, '/int_score_graph_groupB.gml'),
+                                                   "--cluster_address", cluster_address,
+                                                   ifelse(use_ray[2], "--distributed", "")
+        ))
         if (res == 0) {message(format(Sys.time(), "[%y-%m-%d %X] "), "Computation of interaction scores for groupB was successful!")}
     } else {message(format(Sys.time(), "[%y-%m-%d %X] "), "Skipping computation of interaction scores for groupB!")}
 
@@ -157,6 +136,7 @@ load_interaction_score_output <- function(saving_path, graphB_null) {
     #' @return A named list (elements `groupA` and `groupB`). Each element contains an iGraph object
     #' containing the interaction score as edge attribute.
     #' 
+    #' @keywords internal
     #' @export
 
     graphs <- list()

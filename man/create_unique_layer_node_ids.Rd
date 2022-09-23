@@ -29,3 +29,4 @@ differential scores of identical nodes in both sample groups.
 The function is used by the high-level wrapper \link[DrDimont]{generate_individual_graphs} to
 create annotations, which uniquely define nodes across the network layer.
 }
+\keyword{internal}

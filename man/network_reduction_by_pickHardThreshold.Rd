@@ -44,3 +44,4 @@ scale free topology for multiple hard thresholds. A cutoff is estimated, if no c
 found the function terminates with an error message. All values below the cutoff will be set to NA and the
 reduced adjacency is returned.
 }
+\keyword{internal}

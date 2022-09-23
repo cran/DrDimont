@@ -35,13 +35,11 @@ edges adjacent to all drug target nodes of a particular drug.
 data(drug_target_edges_example)
 data(differential_graph_example)
 
-example_settings <- drdimont_settings(
-                       save_data=FALSE,
-                       python_executable="python")
+example_settings <- drdimont_settings()
 
-drug_response_scores <- compute_drug_response_scores(
-                               differential_graph=differential_graph_example,
-                               drug_targets=drug_target_edges_example$targets,
-                               settings=example_settings)
+example_drug_response_scores <- compute_drug_response_scores(
+                                    differential_graph=differential_graph_example,
+                                    drug_targets=drug_target_edges_example$targets,
+                                    settings=example_settings)
 
 }

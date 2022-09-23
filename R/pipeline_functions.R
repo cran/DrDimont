@@ -1,3 +1,33 @@
+install_python_dependencies <- function(package_manager="pip") {
+    #' @title Installs python dependencies needed for interaction score computation
+    #'
+    #' @description Uses pip (default) or conda as specified to 
+    #' install all required Python modules. The Python packages are installed 
+    #' into a virtual Python or conda environment called 'r-DrDimont'. 
+    #' The following requirements are installed: numpy, tqdm, python-igraph and ray.
+    #' The environment is created with reticulate.
+    #'
+    #' @param package_manager ["pip"|"conda"] Package manager to use (default: pip)
+    #'
+    #' @return No return value, called to install python dependencies
+    #' 
+    #' @export
+    
+    if (package_manager=="pip") {
+        reticulate::virtualenv_create("r-DrDimont")
+        reticulate::virtualenv_install(packages=list("numpy", "tqdm", "igraph", "ray"), envname="r-DrDimont", ignore_installed=TRUE)
+    }
+    else if (package_manager=="conda") {
+        reticulate::conda_create("r-DrDimont", python_version=3.9, packages="pip")
+        reticulate::py_install(packages=list("numpy", "tqdm", "igraph", "ray"), envname="r-DrDimont", method="conda", pip=TRUE)
+    }
+    else{
+        stop(message(format(Sys.time(), "[%y-%m-%d %X] "), 
+                     "ERROR: Either use `package_manager=\"pip\"` or `package_manager=\"conda\"` to create python environment and install required python dependencies."))
+    }
+}
+
+
 make_layer <- function(name, data_groupA, data_groupB, identifiers_groupA, identifiers_groupB) {
     #' @title Creates individual molecular layers from raw data and unique identifiers
     #'
@@ -20,25 +50,27 @@ make_layer <- function(name, data_groupA, data_groupB, identifiers_groupA, ident
     #' @examples
     #' data(protein_data)
     #'
-    #' protein_layer <- make_layer(
-    #'                      name="protein",
-    #'                      data_groupA=t(protein_data$groupA[, c(-1,-2)]),
-    #'                      data_groupB=t(protein_data$groupB[, c(-1,-2)]),
-    #'                      identifiers_groupA=data.frame(gene_name=protein_data$groupA$gene_name,
-    #'                                                   ref_seq=protein_data$groupA$ref_seq),
-    #'                      identifiers_groupB=data.frame(gene_name=protein_data$groupB$gene_name,
-    #'                                                   ref_seq=protein_data$groupB$ref_seq))
+    #' example_protein_layer <- make_layer(
+    #'                              name="protein",
+    #'                              data_groupA=protein_data$groupA[, c(-1,-2)],
+    #'                              data_groupB=protein_data$groupB[, c(-1,-2)],
+    #'                              identifiers_groupA=data.frame(
+    #'                                  gene_name=protein_data$groupA$gene_name,
+    #'                                  ref_seq=protein_data$groupA$ref_seq),
+    #'                              identifiers_groupB=data.frame(
+    #'                                  gene_name=protein_data$groupB$gene_name,
+    #'                                  ref_seq=protein_data$groupB$ref_seq))
     #'
     #' @export
 
     ### if group2 data and identifiers not given set it to NULL
     if ((is.null(data_groupB)) & (is.null(identifiers_groupB))){
-        layer <- list(groupA = list(data = data.frame(data_groupA), identifiers = data.frame(identifiers_groupA)),
+        layer <- list(groupA = list(data = t(data.frame(data_groupA)), identifiers = data.frame(identifiers_groupA)),
                       groupB = NULL,
                       name = name)
     } else {
-        layer <- list(groupA = list(data = data.frame(data_groupA), identifiers = data.frame(identifiers_groupA)),
-                      groupB = list(data = data.frame(data_groupB), identifiers = data.frame(identifiers_groupB)),
+        layer <- list(groupA = list(data = t(data.frame(data_groupA)), identifiers = data.frame(identifiers_groupA)),
+                      groupB = list(data = t(data.frame(data_groupB)), identifiers = data.frame(identifiers_groupB)),
                       name = name)
     }
     return_errors(check_layer(layer))
@@ -60,17 +92,15 @@ make_connection <- function(from, to, connect_on, weight=1, group="both") {
     #' the identifiers of both layers, they have to be named identically and the IDs have to be formatted
     #' identically as these are matched by an inner join operation (refer to \code{\link[DrDimont]{make_layer}}).
     #'
-    #' @param from [string] Character string referring to the name of the layer **from** which the connection
-    #' should be established
-    #' @param to [string] Character string referring to the name of the layer **to** which the connection
-    #' should be established
+    #' @param from [string] Name of the layer from which the connection should be established
+    #' @param to [string] Name of the layer to which the connection should be established
     #' @param connect_on [string|table] Specifies how the two layers should be connected. This can be based on a
     #' mutual ID or a table specifying interactions. Mutual ID: Character string specifying the name of an identifier
     #' that is present in both layers (e.g., `NCBI ID` to connect proteins and mRNA). Interaction table: A table mapping
     #' two identifiers of two layers. The columns have exactly the same names as the identifiers of the layers. The table has to
     #' contain an additional column specifying the weight between two components/nodes (see `weight` argument)
     #' @param weight [int|string] Specifies the edge weight between the layers. This can be supplied as a number
-    #' applied to every connection or a column of the interaction table.
+    #' applied to every connection or a column name of the interaction table.
     #' Fixed weight: A umber specifying the weight of every connection between the layers.
     #' Based on interaction table: Character string specifying the name of a column in the
     #' table passed as the `by` parameter which is used as edge weight. (default: 1)
@@ -81,19 +111,21 @@ make_connection <- function(from, to, connect_on, weight=1, group="both") {
     #'
     #' @examples
     #' data(metabolite_protein_interactions)
-    #' inter_layer_connections = list(make_connection(from='mrna', to='protein',
-    #'                                                connect_on='gene_name', weight=1),
-    #'                                make_connection(from='protein', to='phosphosite',
-    #'                                                connect_on='gene_name', weight=1),
-    #'                                make_connection(from='protein', to='metabolite',
-    #'                                                connect_on=metabolite_protein_interactions,
-    #'                                                weight='combined_score'))
+    #' 
+    #' example_inter_layer_connections = list(make_connection(from='mrna', to='protein',
+    #'                                            connect_on='gene_name', weight=1),
+    #'                                        make_connection(from='protein', to='phosphosite',
+    #'                                            connect_on='gene_name', weight=1),
+    #'                                        make_connection(from='protein', to='metabolite',
+    #'                                            connect_on=metabolite_protein_interactions,
+    #'                                            weight='combined_score'))
     #'
     #' @export
 
     inter_layer_connections <- list(from=from, to=to, by="", connect_on=connect_on, weight=weight, group=group)
     if (is.character(connect_on) & is.vector(connect_on) & length(connect_on) == 1) { inter_layer_connections$by <- "id" }
-    else { inter_layer_connections$by <- "table" }
+    else if (is.data.frame(connect_on)) { inter_layer_connections$by <- "table" }
+    else { inter_layer_connections$by <- "none" }
 
     return_errors(check_connection(inter_layer_connections))
     return(inter_layer_connections)
@@ -124,9 +156,10 @@ make_drug_target <- function(target_molecules, interaction_table, match_on) {
     #'
     #' @examples
     #' data(drug_gene_interactions)
-    #' drug_target_interactions <- make_drug_target(target_molecules='protein',
-    #'                                             interaction_table=drug_gene_interactions,
-    #'                                             match_on='gene_name')
+    #' 
+    #' example_drug_target_interactions <- make_drug_target(target_molecules='protein',
+    #'                                         interaction_table=drug_gene_interactions,
+    #'                                         match_on='gene_name')
     #' 
     #' @export
 
@@ -143,16 +176,20 @@ run_pipeline <- function(layers, inter_layer_connections, drug_target_interactio
     #' @description This wrapper function executes all necessary steps to generate differential integrated
     #' drug response scores from the formatted input data. The following input data is required
     #' (and detailed below):
+    #' 
     #' * Layers of stratified molecular data.
+    #' 
     #' * Additional connections between the layers.
+    #' 
     #' * Interactions between drugs and nodes in the network.
+    #' 
     #' * Settings for pipeline execution.
     #'
     #' As this function runs through all steps of the DrDimont pipeline it can take a long time to complete,
     #' especially if the supplied molecular data is rather large. Several prompts will be printed to supply
     #' information on how the pipeline is proceeding. Calculation of the interaction score by
     #' \code{\link[DrDimont]{generate_interaction_score_graphs}} requires saving large-scale graphs to file and calling
-    #' a python script. This handover may take time.
+    #' a Python script. This handover may take time.
     #'
     #' Eventually a data frame is returned containing the supplied drug name and its associated
     #' differential drug response score computed by DrDimont.
@@ -185,33 +222,31 @@ run_pipeline <- function(layers, inter_layer_connections, drug_target_interactio
     #' data(layers_example)
     #'
     #' example_inter_layer_connections = list(make_connection(from='mrna', to='protein',
-    #'                                                connect_on='gene_name', weight=1),
-    #'                                make_connection(from='protein', to='phosphosite',
-    #'                                                connect_on='gene_name', weight=1),
-    #'                                make_connection(from='protein', to='metabolite',
-    #'                                                connect_on=metabolite_protein_interactions,
-    #'                                                weight='combined_score'))
+    #'                                            connect_on='gene_name', weight=1),
+    #'                                        make_connection(from='protein', to='phosphosite',
+    #'                                            connect_on='gene_name', weight=1),
+    #'                                        make_connection(from='protein', to='metabolite',
+    #'                                            connect_on=metabolite_protein_interactions,
+    #'                                            weight='combined_score'))
     #'
     #' example_drug_target_interactions <- make_drug_target(target_molecules='protein',
-    #'                                  interaction_table=drug_gene_interactions,
-    #'                                  match_on='gene_name')
+    #'                                         interaction_table=drug_gene_interactions,
+    #'                                         match_on='gene_name')
     #'
     #' example_settings <- drdimont_settings(
-    #'                        handling_missing_data=list(
-    #'                               default="pairwise.complete.obs",
-    #'                               mrna="all.obs"),
-    #'                        reduction_method="pickHardThreshold",
-    #'                        r_squared=list(default=0.65, metabolite=0.1),
-    #'                        cut_vector=list(default=seq(0.2, 0.65, 0.01)),
-    #'                        save_data=FALSE,
-    #'                        python_executable="python")
+    #'                         handling_missing_data=list(
+    #'                             default="pairwise.complete.obs",
+    #'                             mrna="all.obs"),
+    #'                         reduction_method="pickHardThreshold",
+    #'                         r_squared=list(default=0.65, metabolite=0.1),
+    #'                         cut_vector=list(default=seq(0.2, 0.65, 0.01)))
     #'
     #' \donttest{
     #' run_pipeline(
-    #'      layers=layers_example, 
-    #'      inter_layer_connections=example_inter_layer_connections, 
-    #'      drug_target_interactions=example_drug_target_interactions, 
-    #'      settings=example_settings)
+    #'     layers=layers_example, 
+    #'     inter_layer_connections=example_inter_layer_connections, 
+    #'     drug_target_interactions=example_drug_target_interactions, 
+    #'     settings=example_settings)
     #' }
     #' 
     #' @export
@@ -252,7 +287,7 @@ run_pipeline <- function(layers, inter_layer_connections, drug_target_interactio
                                                                   drug_targets$edgelist,
                                                                   settings)
     if (is.null(interaction_score_graphs)) {
-        message(format(Sys.time(), "[%y-%m-%d %X] "), "Interaction core could not be computed. Maybe Python is not installed. Returning from pipeline early.")
+        message(format(Sys.time(), "[%y-%m-%d %X] "), "ERROR: Interaction score was not computed. Maybe Python could not be run. Returning from pipeline early. Please check if Python is properly installed and `install_python_dependencies` as been called.")
         return(NULL)
     }
 
@@ -300,18 +335,25 @@ compute_correlation_matrices <- function(layers, settings) {
     #' \dontshow{
     #' WGCNA::disableWGCNAThreads()
     #' }
-    #' data(layers_example)
     #'
     #' example_settings <- drdimont_settings(
-    #'                        handling_missing_data=list(
-    #'                               default="pairwise.complete.obs",
-    #'                               mrna="all.obs"),
-    #'                        save_data=FALSE)
+    #'                         handling_missing_data=list(
+    #'                             default="all.obs"))
     #' 
-    #' correlation_matrices <- compute_correlation_matrices(
-    #'                              layers=layers_example[c(1)], 
-    #'                              settings=example_settings)
-    #'
+    #' # mini example with reduced mRNA layer for shorter runtime:
+    #' data(mrna_data)
+    #' reduced_mrna_layer <- make_layer(name="mrna",
+    #'                           data_groupA=mrna_data$groupA[1:5,2:6],
+    #'                           data_groupB=mrna_data$groupB[1:5,2:6],
+    #'                           identifiers_groupA=data.frame(gene_name=mrna_data$groupA$gene_name[1:5]),
+    #'                           identifiers_groupB=data.frame(gene_name=mrna_data$groupB$gene_name[1:5]))
+    #' 
+    #' example_correlation_matrices <- compute_correlation_matrices(
+    #'                                     layers=list(reduced_mrna_layer), 
+    #'                                     settings=example_settings)
+    #' 
+    #' # to run all layers use layers=layers_example from data(layers_example) 
+    #' # in compute_correlation_matrices()
     #'
 
     ### empty list to store correlation matrices of individual layers
@@ -400,22 +442,20 @@ generate_individual_graphs <- function(correlation_matrices, layers, settings) {
     #' data(correlation_matrices_example)
     #'
     #' example_settings <- drdimont_settings(
-    #'                        handling_missing_data=list(
-    #'                               default="pairwise.complete.obs",
-    #'                               mrna="all.obs"),
-    #'                        reduction_method="pickHardThreshold",
-    #'                        r_squared=list(default=0.65, metabolite=0.1),
-    #'                        cut_vector=list(default=seq(0.2, 0.5, 0.01)),
-    #'                        save_data=FALSE,
-    #'                        python_executable="python")
+    #'                         handling_missing_data=list(
+    #'                             default="pairwise.complete.obs",
+    #'                             mrna="all.obs"),
+    #'                         reduction_method="pickHardThreshold",
+    #'                         r_squared=list(default=0.65, metabolite=0.1),
+    #'                         cut_vector=list(default=seq(0.2, 0.5, 0.01)))
     #'
-    #' individual_graphs <- generate_individual_graphs(
-    #'                              correlation_matrices=correlation_matrices_example,
-    #'                              layers=layers_example, 
-    #'                              settings=example_settings)
+    #' example_individual_graphs <- generate_individual_graphs(
+    #'                                  correlation_matrices=correlation_matrices_example,
+    #'                                  layers=layers_example, 
+    #'                                  settings=example_settings)
     #'
-    #' graph_metrics(individual_graphs$graphs$groupA$mrna)
-    #' graph_metrics(individual_graphs$graphs$groupB$mrna)
+    #' graph_metrics(example_individual_graphs$graphs$groupA$mrna)
+    #' graph_metrics(example_individual_graphs$graphs$groupB$mrna)
     #' 
     #' @export
 
@@ -536,22 +576,20 @@ generate_combined_graphs <- function(graphs, annotations, inter_layer_connection
     #' data(metabolite_protein_interactions)
     #'
     #' example_inter_layer_connections = list(make_connection(from='mrna', to='protein',
-    #'                                                connect_on='gene_name', weight=1),
-    #'                                make_connection(from='protein', to='phosphosite',
-    #'                                                connect_on='gene_name', weight=1),
-    #'                                make_connection(from='protein', to='metabolite',
-    #'                                                connect_on=metabolite_protein_interactions,
-    #'                                                weight='combined_score'))
+    #'                                            connect_on='gene_name', weight=1),
+    #'                                        make_connection(from='protein', to='phosphosite',
+    #'                                            connect_on='gene_name', weight=1),
+    #'                                        make_connection(from='protein', to='metabolite',
+    #'                                            connect_on=metabolite_protein_interactions,
+    #'                                            weight='combined_score'))
     #'
-    #' example_settings <- drdimont_settings(
-    #'                        save_data=FALSE,
-    #'                        python_executable="python")
+    #' example_settings <- drdimont_settings()
     #'
-    #' combined_graphs <- generate_combined_graphs(
-    #'                            graphs=individual_graphs_example$graphs,
-    #'                            annotations=individual_graphs_example$annotations,
-    #'                            inter_layer_connections=example_inter_layer_connections,
-    #'                            settings=example_settings)
+    #' example_combined_graphs <- generate_combined_graphs(
+    #'                                graphs=individual_graphs_example$graphs,
+    #'                                annotations=individual_graphs_example$annotations,
+    #'                                inter_layer_connections=example_inter_layer_connections,
+    #'                                settings=example_settings)
     #' 
     #' @export
 
@@ -702,19 +740,17 @@ determine_drug_targets <- function(graphs, annotations, drug_target_interactions
     #' data(drug_gene_interactions)
     #' data(combined_graphs_example)
     #'
-    #' example_settings <- drdimont_settings(
-    #'                        save_data=FALSE,
-    #'                        python_executable="python")
+    #' example_settings <- drdimont_settings()
     #'
     #' example_drug_target_interactions <- make_drug_target(target_molecules='protein',
-    #'                                             interaction_table=drug_gene_interactions,
-    #'                                             match_on='gene_name')
+    #'                                         interaction_table=drug_gene_interactions,
+    #'                                         match_on='gene_name')
     #'
-    #' drug_target_edges <- determine_drug_targets(
-    #'                            graphs=combined_graphs_example$graphs,
-    #'                            annotations=combined_graphs_example$annotations,
-    #'                            drug_target_interactions=example_drug_target_interactions,
-    #'                            settings=example_settings)
+    #' example_drug_target_edges <- determine_drug_targets(
+    #'                                  graphs=combined_graphs_example$graphs,
+    #'                                  annotations=combined_graphs_example$annotations,
+    #'                                  drug_target_interactions=example_drug_target_interactions,
+    #'                                  settings=example_settings)
     #'
     #' @export
 
@@ -759,26 +795,28 @@ generate_interaction_score_graphs <- function(graphs, drug_target_edgelists, set
     #' @title Computes interaction score for combined graphs
     #'
     #' @description  Writes the input data (combined graphs for both groups in `gml` format and
-    #' lists of edges adjacent to drug targets for both groups) to files and calls a python script
-    #' for calculating the score. Output files written by the python script are two graphs in `gml`
-    #' format containing the interaction score as additional interaction_weight edge attribute.
+    #' lists of edges adjacent to drug targets for both groups in `tsv` format) to files and calls a Python script
+    #' for calculating the interaction scores. Output files written by the Python script are two graphs in `gml`
+    #' format containing the interaction score as an additional `interaction_weight` edge attribute.
     #' These are loaded and returned in a named list.
     #' ATTENTION: Data exchange via files is mandatory and takes a long time for large data. Interaction
     #' score computation is expensive and slow because it involves finding all simple paths up to a
-    #' certain length between source and target node of the drug target edges. Don't set `max_path_length`
-    #' in settings to a large value and only consider this step if your graphs have up to approximately
-    #' 2 million edges. Computation is initiated by \code{\link[DrDimont]{calculate_interaction_score}}.
-    #' The python script is parallelized using Ray. Use the setting `int_score_mode` to force sequential
+    #' certain length between source and target node of the drug target edges. Don't set the parameter `max_path_length`
+    #' in \code{\link[DrDimont]{drdimont_settings}} to a large value and only consider this step if your graphs have approximately
+    #' 2 million edges or less. Computation is initiated by \code{\link[DrDimont]{calculate_interaction_score}}.
+    #' The Python script is parallelized using Ray. Use the \code{\link[DrDimont]{drdimont_settings}} parameter `int_score_mode` to force sequential
     #' or parallel computation. Refer to the Ray documentation if you encounter problems with running
-    #' the python script in parallel. DISCLAIMER: Depending on the operating system Python comes
-    #' pre-installed or has to be installed manually.
-    #' Please pay attention to the version and the executable used (python/python3 or homebrew
-    #' python). You can use the `python_executable` setting to specify the command or path.
+    #' the Python script in parallel. DISCLAIMER: Depending on the operating system Python comes
+    #' pre-installed or has to be installed manually. Use DrDimont's \code{\link[DrDimont]{install_python_dependencies}} 
+    #' to install a virtual Python or conda environment containing the required Python packages. 
+    #' You can use the parameter `conda` in \code{\link[DrDimont]{drdimont_settings}} to specify if Python packages 
+    #' were installed with conda (`conda=TRUE`), else a virtual environment installed with pip is 
+    #' assumed (default: `conda=FALSE`).
     #'
     #' @param graphs [list] A named list with elements `groupA` and `groupB` containing the combined graphs
     #' of each group as iGraph object (`graphs` from output of \code{\link[DrDimont]{generate_combined_graphs}})
     #' @param drug_target_edgelists [list] A named list (elements `groupA` and `groupB`). Each element
-    #' contains the list of edges adjacent to drug targets as a dataframe (columns `from`, `to` and
+    #' contains the list of edges adjacent to drug targets as a data frame (columns `from`, `to` and
     #' `weight`). `edgelists` from output of \code{\link[DrDimont]{determine_drug_targets}}
     #' @param settings [list] A named list containing pipeline settings. The settings list has to be
     #' initialized by \code{\link[DrDimont]{drdimont_settings}}. Items in the named list can be
@@ -790,36 +828,38 @@ generate_interaction_score_graphs <- function(graphs, drug_target_edgelists, set
     #' @examples
     #' data(combined_graphs_example)
     #' data(drug_target_edges_example)
-    #'
-    #' example_settings <- drdimont_settings(
-    #'                        save_data=FALSE,
-    #'                        python_executable="python")
+    #' 
+    #' example_settings <- drdimont_settings()
     #'
     #' \donttest{
-    #' interaction_score_graphs <- generate_interaction_score_graphs(
-    #'                                          graphs=combined_graphs_example$graphs,
-    #'                                          drug_target_edgelists=drug_target_edges_example$edgelists,
-    #'                                          settings=example_settings)
+    #' example_interaction_score_graphs <- generate_interaction_score_graphs(
+    #'                                         graphs=combined_graphs_example$graphs,
+    #'                                         drug_target_edgelists=drug_target_edges_example$edgelists,
+    #'                                         settings=example_settings)
     #' }
     #' 
     #' @export
 
+
+    ### write files for Python into savings_path from settings
+    message(format(Sys.time(), "[%y-%m-%d %X] "), "Writing data...")
+    write_interaction_score_input(graphs, drug_target_edgelists, settings$saving_path)
+    message(format(Sys.time(), "[%y-%m-%d %X] "), "done.")
+
+    ### get total number of edges and remove unneeded data
+    total_edges <- sapply(graphs, igraph::ecount)
+    
+    graphB_null <- is.null(graphs$groupB)
+    rm(graphs)
+    rm(drug_target_edgelists)
+    gc()
+
+    ### run the Python script for interaction score calculation
     tryCatch({
-        total_edges <- sapply(graphs, igraph::ecount)
-
-        message(format(Sys.time(), "[%y-%m-%d %X] "), "Writing data...")
-        write_interaction_score_input(graphs, drug_target_edgelists, settings$saving_path)
-
-        graphB_null <- is.null(graphs$groupB)
-        rm(graphs)
-        rm(drug_target_edgelists)
-        gc()
-
-        message(format(Sys.time(), "[%y-%m-%d %X] "), "done.")
-        message(format(Sys.time(), "[%y-%m-%d %X] "), "Running python script for interaction score computation.")
+        message(format(Sys.time(), "[%y-%m-%d %X] "), "Running Python script for interaction score computation.")
         calculate_interaction_score(settings$max_path_length, total_edges, settings$saving_path,
-                                    settings$conda, settings$python_executable, settings$script_path,
-                                    settings$int_score_mode, settings$cluster_address, graphB_null)
+                                    settings$conda, settings$script_path, settings$int_score_mode, 
+                                    settings$cluster_address, graphB_null)
 
         message(format(Sys.time(), "[%y-%m-%d %X] "), "Loading data...")
 
@@ -827,7 +867,7 @@ generate_interaction_score_graphs <- function(graphs, drug_target_edgelists, set
 
         message(format(Sys.time(), "[%y-%m-%d %X] "), "done.\n")
 
-        ### save interaction score graphs as RData file if choosen
+        ### save interaction score graphs as RData file if chosen
         if (settings$save_data) {
             message(format(Sys.time(), "[%y-%m-%d %X] "), "Saving interaction score graphs...")
             save(interaction_score_graphs, file=paste0(settings$saving_path, "/interaction_score_graphs.rda"))
@@ -836,7 +876,7 @@ generate_interaction_score_graphs <- function(graphs, drug_target_edgelists, set
         return(interaction_score_graphs)
 
     }, error = function(e){
-        message(format(Sys.time(), "[%y-%m-%d %X] "), "ERROR: Interaction score cannot be computed. Perhaps python executable could not be run.")
+        message(format(Sys.time(), "[%y-%m-%d %X] "), "ERROR: Interaction score was not computed. Maybe Python could not be run. Please check if Python is properly installed and `install_python_dependencies` as been called.")
         return(NULL)
     })
 }
@@ -862,13 +902,11 @@ generate_differential_score_graph <- function(interaction_score_graphs, settings
     #' @examples
     #' data(interaction_score_graphs_example)
     #'
-    #' example_settings <- drdimont_settings(
-    #'                        save_data=FALSE,
-    #'                        python_executable="python")
+    #' example_settings <- drdimont_settings()
     #'
-    #' differential_score_graph <- generate_differential_score_graph(
-    #'                                   interaction_score_graphs=interaction_score_graphs_example,
-    #'                                   settings=example_settings)
+    #' example_differential_score_graph <- generate_differential_score_graph(
+    #'                                         interaction_score_graphs=interaction_score_graphs_example,
+    #'                                         settings=example_settings)
     #'
     #' @importFrom rlang .data
     #' 
@@ -975,14 +1013,12 @@ compute_drug_response_scores <- function(differential_graph, drug_targets, setti
     #' data(drug_target_edges_example)
     #' data(differential_graph_example)
     #'
-    #' example_settings <- drdimont_settings(
-    #'                        save_data=FALSE,
-    #'                        python_executable="python")
+    #' example_settings <- drdimont_settings()
     #'
-    #' drug_response_scores <- compute_drug_response_scores(
-    #'                                differential_graph=differential_graph_example,
-    #'                                drug_targets=drug_target_edges_example$targets,
-    #'                                settings=example_settings)
+    #' example_drug_response_scores <- compute_drug_response_scores(
+    #'                                     differential_graph=differential_graph_example,
+    #'                                     drug_targets=drug_target_edges_example$targets,
+    #'                                     settings=example_settings)
     #' 
     #' @importFrom rlang .data
     #' 

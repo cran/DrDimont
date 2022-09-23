@@ -8,6 +8,7 @@ chunk <- function(x, chunk_size) (
     #' @return A list of chunks of length chunk_size
     #' @source https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks
     #' 
+    #' @keywords internal
     #' @export
     
     mapply(function(a, b) (x[a:b]),
@@ -27,6 +28,7 @@ chunk_2gether <- function(x, y, chunk_size) (
     #' input vector.
     #' @source modified from: https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks
     #' 
+    #' @keywords internal
     #' @export
     
     mapply(function(a, b) (list(x[a:b], y[a:b])),
@@ -47,6 +49,7 @@ corPvalueStudentParallel <- function(adjacency_matrix, number_of_samples, chunk_
     #' 
     #' @return Vector of p-values for upper triangle
     #'
+    #' @keywords internal
     #' @export
     
     if (is.matrix(number_of_samples)) {
@@ -107,6 +110,7 @@ network_reduction_by_p_value <- function(adjacency_matrix,
     #' @return A reduced adjacency matrix with NA's at martix entries with p-values below threshold.
     #' @source \code{\link[WGCNA]{corPvalueStudent}}
     #' 
+    #' @keywords internal
     #' @export
 
     if (is.null(parallel::getDefaultCluster())) {
@@ -176,6 +180,7 @@ network_reduction_by_pickHardThreshold <- function(adjacency_matrix,
     #' @return A reduced adjacency matrix of correlations with NA's inserted at positions below
     #' estimated cutoff.
     #' 
+    #' @keywords internal
     #' @export
     
     message(format(Sys.time(), "[%y-%m-%d %X] "), 'Reducing network by WGCNA::pickHardThreshold...')
