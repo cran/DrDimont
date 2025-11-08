@@ -1,20 +1,26 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>"
 )
 
-## ----setup1, message=FALSE, warning=FALSE, eval=FALSE-------------------------
-#  install.packages('DrDimont')
+## ----Package installation, message=FALSE, warning=FALSE, eval=FALSE-----------
+# 
+# ### please also install these dependencies of WGCNA (used in DrDimont) explicitly if not already installed
+# if (!require('BiocManager', quietly = TRUE))
+#     install.packages('BiocManager')
+# BiocManager::install(c('GO.db', 'preprocessCore', 'impute'))
+# 
+# install.packages('DrDimont')
 
-## ----setup2, message=FALSE----------------------------------------------------
+## ----Loading DrDimont, message=FALSE------------------------------------------
 library(DrDimont)
 
-## ---- echo=TRUE, warning=FALSE, eval=FALSE------------------------------------
-#  install_python_dependencies(package_manager="pip")
+## ----Install python with pip, echo=TRUE, warning=FALSE, eval=FALSE------------
+# install_python_dependencies(package_manager="pip")
 
-## ---- echo=TRUE, warning=FALSE, eval=FALSE------------------------------------
-#  install_python_dependencies(package_manager="conda")
+## ----Install python with conda, echo=TRUE, warning=FALSE, eval=FALSE----------
+# install_python_dependencies(package_manager="conda")
 
 ## ----Load data----------------------------------------------------------------
 data("mrna_data")
@@ -24,7 +30,7 @@ data("metabolite_data")
 data("metabolite_protein_interactions")
 data("drug_gene_interactions")
 
-## -----------------------------------------------------------------------------
+## ----Data inspection----------------------------------------------------------
 # Data inspection
 mrna_data$groupA[1:3, 1:5]
 protein_data$groupA[1:3, 1:5]
@@ -64,19 +70,19 @@ metabolite_layer <- make_layer(name="metabolite",
 ## ----Make layers list---------------------------------------------------------
 all_layers <- list(mrna_layer, protein_layer, phosphosite_layer, metabolite_layer)
 
-## ----eval=FALSE---------------------------------------------------------------
-#  # (i) make inter-layer connection
-#  make_connection(from='mrna', to='protein', connect_on='gene_name', weight=1, group="both")
+## ----Connections, eval=FALSE--------------------------------------------------
+# # (i) make inter-layer connection
+# make_connection(from='mrna', to='protein', connect_on='gene_name', weight=1, group="both")
 
-## -----------------------------------------------------------------------------
+## ----Data inspection interactions---------------------------------------------
 # Data inspection
 metabolite_protein_interactions[1:3, ]
 
-## ----eval=FALSE---------------------------------------------------------------
-#  # (ii) make inter-layer connection
-#  make_connection(from='protein', to='metabolite',
-#                  connect_on=metabolite_protein_interactions,
-#                  weight='combined_score', group="both")
+## ----Inter-layer connection, eval=FALSE---------------------------------------
+# # (ii) make inter-layer connection
+# make_connection(from='protein', to='metabolite',
+#                 connect_on=metabolite_protein_interactions,
+#                 weight='combined_score', group="both")
 
 ## ----Inter-layer connections--------------------------------------------------
 all_inter_layer_connections = list(
@@ -86,7 +92,7 @@ all_inter_layer_connections = list(
         connect_on=metabolite_protein_interactions, weight='combined_score', group="both")
 )
 
-## -----------------------------------------------------------------------------
+## ----Data inspection drug-target----------------------------------------------
 # Data inspection
 drug_gene_interactions[1:3, ]
 
@@ -96,32 +102,49 @@ all_drug_target_interactions <- make_drug_target(
                                     interaction_table=drug_gene_interactions,
                                     match_on='gene_name')
 
-## -----------------------------------------------------------------------------
+## ----Check for errors---------------------------------------------------------
 return_errors(check_input(layers=all_layers, 
                           inter_layer_connections=all_inter_layer_connections, 
                           drug_target_interactions=all_drug_target_interactions))
 
 ## ----Settings-----------------------------------------------------------------
 example_settings <- drdimont_settings(
+                        ### saving
+                        saving_path = tempdir(),
+                        save_data = FALSE,
+                        ### network generation
+                        correlation_method = "spearman",
                         handling_missing_data = list(
                             default = "pairwise.complete.obs",
                             mrna = "all.obs"),
+                        ### network reduction
                         reduction_method = "pickHardThreshold",
+                        ### pickHardThreshold
                         r_squared=list(default=0.65, metabolite=0.1),
                         cut_vector=list(default=seq(0.2, 0.65, 0.01)),
-                        conda=FALSE,
-                        save_data = FALSE,
-                        saving_path = tempdir())
-# disable multi-threading for example run; 
-# not recommended for actual data processing
+                        mean_number_edges = NULL,
+                        edge_density = NULL,
+                        ### p-value (not used in this example)
+                        p_value_adjustment_method = "BH",
+                        reduction_alpha = 0.05,
+                        ### interaction_score
+                        conda = FALSE,
+                        max_path_length = 3,
+                        num_cpus = 1,
+                        int_score_mode = "auto",
+                        ### drug response score
+                        median_drug_response=FALSE,
+                        absolute_difference=FALSE
+                        )
+# to disable multi-threading for example run: (not recommended for actual data processing)
 WGCNA::disableWGCNAThreads()
 
 
 ## ----Run pipeline, eval=FALSE-------------------------------------------------
-#  run_pipeline(layers=all_layers,
-#               inter_layer_connections=all_inter_layer_connections,
-#               drug_target_interactions=all_drug_target_interactions,
-#               settings=example_settings)
+# run_pipeline(layers=all_layers,
+#              inter_layer_connections=all_inter_layer_connections,
+#              drug_target_interactions=all_drug_target_interactions,
+#              settings=example_settings)
 
 ## ----Correlation matrices, message=FALSE, results='hide'----------------------
 reduced_mrna_layer <- make_layer(name="mrna",
@@ -165,10 +188,10 @@ example_drug_target_edges <- determine_drug_targets(
                                  settings=example_settings)
 
 ## ----Calculate interaction score, eval=FALSE, message=FALSE, results='hide'----
-#  example_interaction_score_graphs <- generate_interaction_score_graphs(
-#                                          graphs=example_combined_graphs[["graphs"]],
-#                                          drug_target_edgelists=example_drug_target_edges[["edgelists"]],
-#                                          settings=example_settings)
+# example_interaction_score_graphs <- generate_interaction_score_graphs(
+#                                         graphs=example_combined_graphs[["graphs"]],
+#                                         drug_target_edgelists=example_drug_target_edges[["edgelists"]],
+#                                         settings=example_settings)
 
 ## ----Calculate differential score, message=FALSE, results='hide'--------------
 data("interaction_score_graphs_example")

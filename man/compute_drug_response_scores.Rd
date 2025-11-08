@@ -21,7 +21,7 @@ initialized by \code{\link[DrDimont]{drdimont_settings}}. Items in the named lis
 adjusted as desired.}
 }
 \value{
-Data frame containing drug name and associated differential (integrated) drug response score
+Dataframe containing drug name and associated differential (integrated) drug response score
 }
 \description{
 This function takes the differential graph (generated in

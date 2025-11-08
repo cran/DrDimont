@@ -21,7 +21,7 @@ Character string vector containing error messages.
 }
 \description{
 Checks if input data is valid and formatted correctly. This function is a
-wrapper for other check functions to be executed as first step of the DrDimont pipeline.
+wrapper for other check functions to be executed as the first step of the DrDimont pipeline.
 }
 \examples{
 data(layers_example)

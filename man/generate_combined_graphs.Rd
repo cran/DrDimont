@@ -16,7 +16,7 @@ generate_combined_graphs(
 iGraph objects (`graphs` from output of \code{\link[DrDimont]{generate_individual_graphs}}).}
 
 \item{annotations}{[list] A named list (elements `groupA`, `groupB` and `both`). Each element contains a
-list of data frames mapping each node IDs to identifiers. `both` contains unique identifiers across the
+list of dataframes mapping each node IDs to identifiers. `both` contains unique identifiers across the
 whole data. (`annotations` from output of \code{\link[DrDimont]{generate_individual_graphs}})}
 
 \item{inter_layer_connections}{[list] Named list with specified inter-layer connections. Names are

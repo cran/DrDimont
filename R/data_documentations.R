@@ -7,12 +7,12 @@
 #' List containing four layer items created by \code{\link[DrDimont]{make_layer}}.
 #' Each layer contains `data` and `identifiers` stratified by group and a `name`
 #' element giving the layer name. The data contained in this example refers to mRNA,
-#' protein, phosphosite and metabolite layers. The mRNA, protein and phosphosite
-#' data was adapted and reduced from Krug et al. (2020) containing data from the
+#' protein, phosphosite, and metabolite layers. The mRNA, protein, and phosphosite
+#' data was adapted and reduced from Krug et al. (2020), containing data from the
 #' Clinical Proteomic Tumor Analysis Consortium (CPTAC). The metabolite data was
 #' sampled randomly to generate distributions similar to those reported, e.g., in
 #' Terunuma et al. (2014). The `data` elements contain the raw data with samples as columns
-#' and molecular entities as rows. The `identifiers` elements contain layer specific identifiers
+#' and molecular entities as rows. The `identifiers` elements contain layer-specific identifiers
 #' for the molecular entities, e.g, gene_name.
 #'
 #' @format A list with 4 items. Each layer list contains 2 groups and a `name` element. Each group
@@ -21,7 +21,7 @@
 #'   \item{groupA}{Data associated with `groupA`}
 #'   \describe{
 #'   \item{data}{Raw data. Components (e.g. genes or proteins) in columns, samples in rows}
-#'   \item{identifiers}{Data frame containing one column per ID}
+#'   \item{identifiers}{Dataframe containing one column per ID}
 #'   }
 #'   \item{groupB}{Data associated with `groupB`}
 #'   \describe{
@@ -31,7 +31,7 @@
 #'   \item{name}{Name of the layer}
 #' }
 #' @source Terunuma, Atsushi et al. “MYC-driven accumulation of 2-hydroxyglutarate
-#' is associated with breast cancer prognosis.” The Journal of clinical investigation
+#' is associated with breast cancer prognosis.” The Journal of Clinical Investigation
 #' vol. 124,1 (2014): 398-412. doi:10.1172/JCI71180
 #' @source Krug, Karsten et al. “Proteogenomic Landscape of Breast Cancer Tumorigenesis
 #' and Targeted Therapy.” Cell vol. 183,5 (2020): 1436-1456.e31. doi:10.1016/j.cell.2020.10.036
@@ -67,15 +67,15 @@
 #'     }
 #'     \item{groupB}{same structure as `groupA`}
 #'     }
-#'   \item{annotations}{A named list containing data frames of mappings of assigned node IDs to the
+#'   \item{annotations}{A named list containing dataframes of mappings of assigned node IDs to the
 #'   user-provided component identifiers for nodes in `groupA` or `groupB` and all nodes}
 #'   \describe{
 #'   \item{groupA}{Annotations associated with `groupA`}
 #'     \describe{
-#'     \item{mrna}{Data frame}
-#'     \item{protein}{Data frame}
-#'     \item{phosphosite}{Data frame}
-#'     \item{metabolite}{Data frame}
+#'     \item{mrna}{Dataframe}
+#'     \item{protein}{Dataframe}
+#'     \item{phosphosite}{Dataframe}
+#'     \item{metabolite}{Dataframe}
 #'     }
 #'   \item{groupB}{same structure as `groupA`}
 #'   \item{both}{same structure as `groupA`}
@@ -122,15 +122,15 @@
 #'     }
 #'     \item{groupB}{same structure as `groupA`}
 #'     }
-#'   \item{annotations}{A named list containing data frames of mappings of assigned node IDs to the
+#'   \item{annotations}{A named list containing dataframes of mappings of assigned node IDs to the
 #'   user-provided component identifiers for nodes in `groupA` or `groupB` and all nodes}
 #'   \describe{
 #'   \item{groupA}{Annotations associated with `groupA`}
 #'     \describe{
-#'     \item{mrna}{Data frame}
-#'     \item{protein}{Data frame}
-#'     \item{phosphosite}{Data frame}
-#'     \item{metabolite}{Data frame}
+#'     \item{mrna}{Dataframe}
+#'     \item{protein}{Dataframe}
+#'     \item{phosphosite}{Dataframe}
+#'     \item{metabolite}{Dataframe}
 #'     }
 #'   \item{groupB}{same structure as `groupA`}
 #'   \item{both}{same structure as `groupA`}
@@ -154,7 +154,7 @@
 #'
 #' A subset of the original data by Krug et al. (2020) and randomly sampled metabolite
 #' data from \code{\link[DrDimont]{layers_example}} was used to generate the correlation
-#' matrices, individual graphs and combined graphs. They were created from data
+#' matrices, individual graphs, and combined graphs. They were created from data
 #' stratified by estrogen receptor (ER) status: `groupA` contains data of ER+
 #' patients and `groupB` of ER- patients.
 #'
@@ -165,11 +165,11 @@
 #'     \item{groupA}{Graph associated with `groupA`}
 #'     \item{groupB}{Graph associated with `groupB`}
 #'     }
-#'   \item{annotations}{A data frame of mappings of assigned node IDs to the
+#'   \item{annotations}{A dataframe of mappings of assigned node IDs to the
 #'   user-provided component identifiers for all nodes in `groupA` and `groupB` together
 #'   and all layers}
 #'   \describe{
-#'   \item{both}{Data frame}
+#'   \item{both}{Dataframe}
 #'   }
 #' }
 #' @source Krug, Karsten et al. “Proteogenomic Landscape of Breast Cancer Tumorigenesis and
@@ -195,17 +195,17 @@
 #' \describe{
 #'   \item{targets}{A named list}
 #'   \describe{
-#'   \item{target_nodes}{data frame with column `node_id` (unique node IDs in the graph targeted by
+#'   \item{target_nodes}{dataframe with column `node_id` (unique node IDs in the graph targeted by
 #'    drugs) and columns `groupA` and `groupB` (bool values specifying whether the node is
 #'    contained in the combined graph of the group)}
 #'   \item{drugs_to_target_nodes}{Element `drugs_to_target_nodes` contains a named list mapping drug
 #'    names to a vector of their target node IDs.}
 #'   }
-#'   \item{edgelists}{Contains elements `groupA` and `groupB` containing each a data frame of edges
-#'   adjacent to drug target nodes each. Each edgelist data frame contains columns `from`, `to` and
+#'   \item{edgelists}{Contains elements `groupA` and `groupB` containing each a dataframe of edges
+#'   adjacent to drug target nodes each. Each edgelist dataframe contains columns `from`, `to`, and
 #'   `weight`.}
 #' }
-#' @source The Drug Gene Interaction Database: \url{https://www.dgidb.org/}
+#' @source The Drug Gene Interaction Database: \url{https://dgidb.org/}
 #'
 "drug_target_edges_example"
 
@@ -221,7 +221,7 @@
 #'
 #' A subset of the original data by Krug et al. (2020) and randomly sampled metabolite
 #' data from \code{\link[DrDimont]{layers_example}} was used to generate the correlation
-#' matrices, individual graphs and combined graphs. They were created from data
+#' matrices, individual graphs, and combined graphs. They were created from data
 #' stratified by estrogen receptor (ER) status: `groupA` contains data of ER+
 #' patients and `groupB` of ER- patients. Drug-gene interactions were used from
 #' The Drug Gene Interaction Database.
@@ -233,7 +233,7 @@
 #' }
 #' @source Krug, Karsten et al. “Proteogenomic Landscape of Breast Cancer Tumorigenesis and Targeted
 #'  Therapy.” Cell vol. 183,5 (2020): 1436-1456.e31. doi:10.1016/j.cell.2020.10.036
-#' @source The Drug Gene Interaction Database: \url{https://www.dgidb.org/}
+#' @source The Drug Gene Interaction Database: \url{https://dgidb.org/}
 "interaction_score_graphs_example"
 
 
@@ -247,7 +247,7 @@
 #'
 #' A subset of the original data by Krug et al. (2020) and randomly sampled metabolite
 #' data from \code{\link[DrDimont]{layers_example}} was used to generate the correlation
-#' matrices, individual graphs and combined graphs. They were created from data
+#' matrices, individual graphs, and combined graphs. They were created from data
 #' stratified by estrogen receptor (ER) status: `groupA` contains data of ER+
 #' patients and `groupB` of ER- patients.
 #'
@@ -259,7 +259,7 @@
 
 #' Drug response score
 #'
-#' Exemplary final pipeline output: Drug response score data frame. This contains drugs and the
+#' Exemplary final pipeline output: Drug response score dataframe. This contains drugs and the
 #' calculated differential drug response score. The score was calculated by
 #' \code{\link[DrDimont]{compute_drug_response_scores}} using
 #' \link[DrDimont]{differential_graph_example}, \link[DrDimont]{drug_target_edges_example} and
@@ -268,21 +268,21 @@
 #'              interaction_table=drug_gene_interactions,
 #'              match_on='gene_name')}
 #'
-#'A subset of the original data by Krug et al. (2020) and randomly sampled metabolite
+#' A subset of the original data by Krug et al. (2020) and randomly sampled metabolite
 #' data from \code{\link[DrDimont]{layers_example}} was used to generate the correlation
-#' matrices, individual graphs and combined graphs, interaction score graphs and differential
+#' matrices, individual graphs, combined graphs, interaction score graphs, and differential
 #' score graph. They were created from data stratified by estrogen receptor (ER) status:
 #' `groupA` contains data of ER+ patients and `groupB` of ER- patients. Drug-gene
 #' interactions were used from The Drug Gene Interaction Database.
 #'
-#' @format Data frame with two columns
+#' @format Dataframe with two columns
 #' \describe{
 #'   \item{drug_name}{Names of drugs}
 #'   \item{drug_response_scores}{Associated differential drug response scores}
 #' }
 #' @source Krug, Karsten et al. “Proteogenomic Landscape of Breast Cancer Tumorigenesis and Targeted
 #'  Therapy.” Cell vol. 183,5 (2020): 1436-1456.e31. doi:10.1016/j.cell.2020.10.036
-#' @source The Drug Gene Interaction Database: \url{https://www.dgidb.org/}
+#' @source The Drug Gene Interaction Database: \url{https://dgidb.org/}
 "drug_response_scores_example"
 
 
@@ -290,10 +290,10 @@
 
 #' mRNA expression data
 #'
-#' mRNA analysis of breast cancer patients data from Krug et al. (2020) (data from the Clinical
+#' mRNA analysis of breast cancer patient data from Krug et al. (2020) (data from the Clinical
 #' Proteomic Tumor Analysis Consortium (CPTAC)). The data is stratified by estrogen receptor (ER)
 #' expression status (`groupA` = ER+, `groupB` = ER-). The data was reduced to 50 genes.
-#' For each group a data frame is given containing the raw data with the mRNA/gene as rows and the
+#' For each group, a dataframe is given containing the raw data with the mRNA/gene as rows and the
 #' samples as columns. The first column contains the gene identifiers (gene_name).
 #'
 #' @format
@@ -313,7 +313,7 @@
 #' Protein analysis of breast cancer patients data from Krug et al. (2020) (data from the Clinical
 #' Proteomic Tumor Analysis Consortium (CPTAC)). The data is stratified by estrogen receptor (ER)
 #' expression status (`groupA` = ER+, `groupB` = ER-). The data was reduced to 50 genes.
-#' For each group a data frame is given containing the raw data with the proteins as rows and the
+#' For each group a dataframe is given containing the raw data with the proteins as rows and the
 #' samples as columns. The first two columns contain the protein identifiers
 #' (ref_seq and gene_name).
 #'
@@ -331,10 +331,10 @@
 
 #' Phosphosite data
 #'
-#' Phosphosite analysis of breast cancer patients data from Krug et al. (2020) (data from the Clinical
+#' Phosphosite analysis of breast cancer patient data from Krug et al. (2020) (data from the Clinical
 #' Proteomic Tumor Analysis Consortium (CPTAC)). The data is stratified by estrogen receptor (ER)
 #' expression status (`groupA` = ER+, `groupB` = ER-). The data was reduced to 50 genes.
-#' For each group a data frame is given containing the raw data with the phosphosites as rows and the
+#' For each group, a dataframe is given containing the raw data with the phosphosites as rows and the
 #' samples as columns. The first three columns contain the phosphosite and protein identifiers
 #' (site_id, ref_seq and gene_name).
 #'
@@ -354,11 +354,11 @@
 
 #' Metabolomics data
 #'
-#' Metabolomics analysis of breast cancer patients data sampled randomly to
+#' Metabolomics analysis of breast cancer patient data sampled randomly to
 #' generate distributions similar to those reported (e.g., in Terunuma et al. (2014)).
 #' The data is stratified by estrogen receptor (ER) expression status (`groupA` = ER+, `groupB` = ER-). 
 #' The data was reduced to 50 metabolites. 
-#' For each group a data frame is given containing the raw data with the metabolites as rows and the
+#' For each group, a dataframe is given containing the raw data with the metabolites as rows and the
 #' samples as columns. The first three columns contain the metabolite identifiers
 #' (biochemical_name, metabolon_id and pubchem_id).
 #'
@@ -372,8 +372,8 @@
 #'                 other columns are samples containing the quantified metabolite data per metabolite}
 #' }
 #' @source Terunuma, Atsushi et al. “MYC-driven accumulation of 2-hydroxyglutarate is associated
-#' with breast cancer prognosis.”
-#' The Journal of clinical investigation vol. 124,1 (2014): 398-412. doi:10.1172/JCI71180
+#' with breast cancer prognosis.” The Journal of Clinical Investigation 
+#' vol. 124,1 (2014): 398-412. doi:10.1172/JCI71180
 #' @source \url{https://www.metabolon.com}
 #' @source Pubchem IDs: \url{https://pubchem.ncbi.nlm.nih.gov}
 #' @source MetaboAnalyst: \url{https://www.metaboanalyst.ca/faces/upload/ConvertView.xhtml}
@@ -383,16 +383,16 @@
 
 #' Metabolite protein interaction data
 #'
-#' @description Data frame providing interactions of metabolites and proteins. The data was taken
+#' @description Dataframe providing interactions of metabolites and proteins. The data was taken
 #' from the STITCH Database.
 #'
-#' @format A data frame with 3 columns.
+#' @format A dataframe with 3 columns.
 #' \describe{
 #'   \item{pubchem_id}{Pubchem IDs defining interacting metabolites}
 #'   \item{gene_name}{gene names defining interacting proteins}
 #'   \item{combined_score}{Score describing the strength of metabolite-protein interaction}
 #' }
-#' @source STITCH DB: \url{http://stitch.embl.de/}
+#' @source STITCH DB: \url{https://stitch-db.org/}
 #' @source Pubchem IDs: \url{https://pubchem.ncbi.nlm.nih.gov}
 #' @source STRING DB: \url{https://string-db.org/}
 "metabolite_protein_interactions"
@@ -400,15 +400,15 @@
 
 #' Drug-gene interactions
 #'
-#' Data frame providing interactions of drugs with genes. The data was downloaded from
+#' @description Dataframe providing interactions of drugs with genes. The data was downloaded from
 #' The Drug Gene Interaction Database.
 #'
-#' @format A data frame with 4 columns.
+#' @format A dataframe with 4 columns.
 #' \describe{
 #'   \item{gene_name}{Gene names of targeted protein-coding genes.}
 #'   \item{drug_name}{Drug-names with known interactions.}
 #'   \item{drug_chembl_id}{ChEMBL ID of drugs.}
 #' }
-#' @source The Drug Gene Interaction Database: \url{https://www.dgidb.org/}
+#' @source The Drug Gene Interaction Database: \url{https://dgidb.org/}
 #' @source ChEMBL IDs: \url{https://www.ebi.ac.uk/chembl}
 "drug_gene_interactions"

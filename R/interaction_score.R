@@ -8,14 +8,14 @@ write_interaction_score_input <- function(combined_graphs, drug_target_edgelists
     #' @param combined_graphs [list] A named list (elements `groupA` and `groupB`). Each element contains the
     #' entire combined network (layers + inter-layer connections) as iGraph graph object.
     #' @param drug_target_edgelists [list] A named list (elements `groupA` and `groupB`). Each element
-    #' contains the list of edges to be considered in the interaction score calculation as data frame (columns `from`, `to` and `weight`)
+    #' contains the list of edges to be considered in the interaction score calculation as dataframe (columns `from`, `to`, and `weight`)
     #' @param saving_path [string] Path to save intermediate output of DrDimont's functions.
     #' Default is current working directory.
     #'
     #' @return No return value, used internally
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
 
     # iterate over groups
     for(group in c("groupA", "groupB")) {
@@ -33,6 +33,7 @@ calculate_interaction_score <- function(max_path_length,
                                         saving_path,
                                         conda=FALSE,
                                         script_path=NULL,
+                                        num_cpus=1,
                                         int_score_mode="auto",
                                         cluster_address="auto",
                                         graphB_null=FALSE) {
@@ -57,6 +58,7 @@ calculate_interaction_score <- function(max_path_length,
     #' with conda, else python dependencies are assumed to be installed with pip. (default: FALSE)
     #' @param script_path [string] Path to the interaction score Python script. Set NULL to use package
     #' internal script (default).
+    #' @param num_cpus [int] Number of CPUs to use for parallel computation. (default: 1)
     #' @param int_score_mode ["auto"|"sequential"|"ray"] Whether to compute interaction
     #' score in parallel using the Ray python library or sequentially. When `auto` it depends on the
     #' graph sizes. (default: "auto")
@@ -68,7 +70,7 @@ calculate_interaction_score <- function(max_path_length,
     #' @return Does not return anything, instead calls Python script which outputs `gml` files
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
 
     py_script <- ifelse(is.null(script_path), system.file("python_igraph_interaction_score.py", package = "DrDimont"), script_path)
     graph_file_groupA <- paste0(saving_path, "/combined_graph_groupA.gml")
@@ -93,7 +95,7 @@ calculate_interaction_score <- function(max_path_length,
     }
 
     if (conda) {
-        python_executable=reticulate::conda_python(envname='r-DrDimont')
+        python_executable=reticulate::conda_python(envname="r-DrDimont")
     } else {
         python_executable=reticulate::virtualenv_python(envname="r-DrDimont")
     }
@@ -102,6 +104,7 @@ calculate_interaction_score <- function(max_path_length,
                                                edgelist_file_groupA,
                                                max_path_length,
                                                "--output", paste0(saving_path, "/int_score_graph_groupA.gml"),
+                                               "--num_cpus", num_cpus,
                                                "--cluster_address", cluster_address,
                                                ifelse(use_ray[1], "--distributed", "")))
     if (res == 0) {message(format(Sys.time(), "[%y-%m-%d %X] "), "Computation of interaction scores for groupA was successful!")}
@@ -112,7 +115,8 @@ calculate_interaction_score <- function(max_path_length,
                                                    graph_file_groupB,
                                                    edgelist_file_groupB,
                                                    max_path_length,
-                                                   '--output', paste0(saving_path, '/int_score_graph_groupB.gml'),
+                                                   "--output", paste0(saving_path, "/int_score_graph_groupB.gml"),
+                                                   "--num_cpus", num_cpus,
                                                    "--cluster_address", cluster_address,
                                                    ifelse(use_ray[2], "--distributed", "")
         ))
@@ -137,7 +141,7 @@ load_interaction_score_output <- function(saving_path, graphB_null) {
     #' containing the interaction score as edge attribute.
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
 
     graphs <- list()
 
@@ -147,7 +151,7 @@ load_interaction_score_output <- function(saving_path, graphB_null) {
             message(format(Sys.time(), "[%y-%m-%d %X] "), group, "skipped. ")
             next
         }
-        graphs[[group]] <- igraph::read.graph(paste0(saving_path, '/int_score_graph_', group, '.gml'), format = 'gml')
+        graphs[[group]] <- igraph::read.graph(paste0(saving_path, "/int_score_graph_", group, ".gml"), format = "gml")
         gc()
         message(format(Sys.time(), "[%y-%m-%d %X] "), group," done.")
     }

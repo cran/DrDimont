@@ -1,6 +1,6 @@
 chunk <- function(x, chunk_size) (
     #' @title [INTERNAL] Create chunks from a vector for parallel computing
-    #' @description [INTERNAL] Create chunks from a vector for parallel computing
+    #' @description [INTERNAL] Deprecated! This function will be removed in future versions. Create chunks from a vector for parallel computing
     #'
     #' @param x Vector
     #' @param chunk_size [int] Length of chunks
@@ -9,7 +9,7 @@ chunk <- function(x, chunk_size) (
     #' @source https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
     
     mapply(function(a, b) (x[a:b]),
            seq.int(from=1, to=length(x), by=chunk_size),
@@ -19,9 +19,10 @@ chunk <- function(x, chunk_size) (
 
 chunk_2gether <- function(x, y, chunk_size) (
     #' @title [INTERNAL] Create chunks from two vectors for parallel computing
-    #' @description [INTERNAL] Create chunks from two vectors for parallel computing
+    #' @description [INTERNAL] Deprecated! This function will be removed in future versions. Create chunks from two vectors for parallel computing
     #'
-    #' @param x,y Vectors
+    #' @param x Vector    
+    #' @param y Vector
     #' @param chunk_size [int] Length of chunks
     #'
     #' @return A list of lists. Each second level list contains a list of chunks of length chunk_size of each
@@ -29,7 +30,7 @@ chunk_2gether <- function(x, y, chunk_size) (
     #' @source modified from: https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
     
     mapply(function(a, b) (list(x[a:b], y[a:b])),
            seq.int(from=1, to=length(x), by=chunk_size),
@@ -39,7 +40,7 @@ chunk_2gether <- function(x, y, chunk_size) (
 
 corPvalueStudentParallel <- function(adjacency_matrix, number_of_samples, chunk_size) {
     #' @title [INTERNAL] Compute p-values for upper triangle of correlation matrix in parallel
-    #' @description [INTERNAL] Compute p-values for upper triangle of correlation matrix in parallel
+    #' @description [INTERNAL] Deprecated! This function will be removed in future versions. Compute p-values for upper triangle of correlation matrix in parallel
     #'
     #' @param adjacency_matrix [matrix] Adjacency matrix of correlations computed using \code{\link[WGCNA]{cor}} in
     #' \code{\link[DrDimont]{compute_correlation_matrices}}
@@ -50,7 +51,7 @@ corPvalueStudentParallel <- function(adjacency_matrix, number_of_samples, chunk_
     #' @return Vector of p-values for upper triangle
     #'
     #' @keywords internal
-    #' @export
+    #' @noRd
     
     if (is.matrix(number_of_samples)) {
         # if number_of_samples is a matrix, 'pairwise.complete.obs' was used -> supply number of samples for each individual correlation calculated
@@ -81,20 +82,16 @@ corPvalueStudentParallel <- function(adjacency_matrix, number_of_samples, chunk_
 network_reduction_by_p_value <- function(adjacency_matrix,
                                          number_of_samples,
                                          p_value_adjustment_method="BH",
-                                         reduction_alpha=0.05,
-                                         parallel_chunk_size=10^6) {
+                                         reduction_alpha=0.05) {
 
     #' @title [INTERNAL] Reduce the the entries in an adjacency matrix by thresholding on p-values
     #'
     #' @description [INTERNAL] This function reduces an adjacency matrix of correlations based on p-values.
-    #' If computations are done non-parallel \code{\link[WGCNA]{corPvalueStudent}} is used. If computations
-    #' are done in parallel, our own parallel implementation (\code{\link[DrDimont]{corPvalueStudentParallel}})
-    #' of this function to calculate Student asymptotic p-values taking the number of samples into account is used.
+    #' If computations are done non-parallel \code{\link[WGCNA]{corPvalueStudent}} is used. 
     #' P-values are adjusted using \link[stats]{p.adjust} function. The upper triangle without diagonal entries
     #' of the adjacency matrix is passed for faster computation. P-values can be adjusted using one
     #' of several methods. A significance threshold `alpha` can be set. All value entries below this threshold within the
-    #' initial adjacency matrix will be set to NA. If a default cluster is registered with the `parallel` package the
-    #' computation will happen in parallel automatically.
+    #' initial adjacency matrix will be set to NA.
     #' 
     #' @param adjacency_matrix [matrix] Adjacency matrix of correlations computed using \code{\link[WGCNA]{cor}} in
     #' \code{\link[DrDimont]{compute_correlation_matrices}}
@@ -104,23 +101,18 @@ network_reduction_by_p_value <- function(adjacency_matrix,
     #' of the correction method applied to p-values. Passed to \link[stats]{p.adjust}. (default: "BH")
     #' @param reduction_alpha [float] A number indicating the significance value for correlation p-values
     #' during reduction. Not-significant edges are dropped. (default: 0.05)
-    #' @param parallel_chunk_size [int] Number of p-values in smallest work unit when computing in parallel
-    #' during network reduction with method `p_value`. (default: 10^6)
     #' 
     #' @return A reduced adjacency matrix with NA's at martix entries with p-values below threshold.
     #' @source \code{\link[WGCNA]{corPvalueStudent}}
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
 
-    if (is.null(parallel::getDefaultCluster())) {
-        # compute p values on upper triangle only (-> symmetric matrix)
-        upper_adjacency_matrix <- adjacency_matrix[upper.tri(adjacency_matrix)]
-        if (is.matrix(number_of_samples)) { number_of_samples <- number_of_samples[upper.tri(number_of_samples)] }
-        p_values <- WGCNA::corPvalueStudent(upper_adjacency_matrix, number_of_samples)
-    } else {
-        p_values <- corPvalueStudentParallel(adjacency_matrix, number_of_samples, parallel_chunk_size)
-    }
+    
+    # compute p values on upper triangle only (-> symmetric matrix)
+    upper_adjacency_matrix <- adjacency_matrix[upper.tri(adjacency_matrix)]
+    if (is.matrix(number_of_samples)) { number_of_samples <- number_of_samples[upper.tri(number_of_samples)] }
+    p_values <- WGCNA::corPvalueStudent(upper_adjacency_matrix, number_of_samples)
 
     message(format(Sys.time(), "[%y-%m-%d %X] "), "p-value matrix calculated.")
 
@@ -141,7 +133,7 @@ network_reduction_by_p_value <- function(adjacency_matrix,
 
     message(format(Sys.time(), "[%y-%m-%d %X] "), "thresholding done.")
 
-    adjacency_matrix[not_significant] <- NA
+    adjacency_matrix[not_significant] <- -999
 
     return(adjacency_matrix)
 }
@@ -181,7 +173,7 @@ network_reduction_by_pickHardThreshold <- function(adjacency_matrix,
     #' estimated cutoff.
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
     
     message(format(Sys.time(), "[%y-%m-%d %X] "), 'Reducing network by WGCNA::pickHardThreshold...')
 
@@ -196,7 +188,7 @@ network_reduction_by_pickHardThreshold <- function(adjacency_matrix,
         ### "invisible(capture.output())" suppresses printing of a table of cutoff and R^2 values
         ### WGCNA pickHardThreshold computation
         invisible(utils::capture.output(
-            wgcna_tresholds <-WGCNA::pickHardThreshold.fromSimilarity(abs(adjacency_matrix), cutVector=cut_vector)
+            wgcna_tresholds <- WGCNA::pickHardThreshold.fromSimilarity(abs(adjacency_matrix), cutVector=cut_vector)
         ))
 
         ### get WGCNA cut with mean number of edges <= mean_number_edges
@@ -207,7 +199,7 @@ network_reduction_by_pickHardThreshold <- function(adjacency_matrix,
             slope_val  <- wgcna_tresholds$fitIndices[row, "slope."]
             mean_k_val <- wgcna_tresholds$fitIndices[row, "mean.k."]
 
-            if ((slope_val<0) & (mean_k_val <= mean_number_edges*2)){
+            if ((mean_k_val <= mean_number_edges*2)){ #(slope_val<0) & 
                 cut_estimate=cut_val
                 message(format(Sys.time(), "[%y-%m-%d %X] "), 'R2 cutoff: ', round(r2_val, 2))
                 message(format(Sys.time(), "[%y-%m-%d %X] "), 'Cut Threshold: ', as.character(cut_estimate))
@@ -240,7 +232,7 @@ network_reduction_by_pickHardThreshold <- function(adjacency_matrix,
         ### "invisible(capture.output())" suppresses printing of a table of cutoff and R^2 values
         ### WGCNA pickHardThreshold computation
         invisible(utils::capture.output(
-            wgcna_tresholds <-WGCNA::pickHardThreshold.fromSimilarity(abs(adjacency_matrix), cutVector=cut_vector)
+            wgcna_tresholds <- WGCNA::pickHardThreshold.fromSimilarity(abs(adjacency_matrix), cutVector=cut_vector)
         ))
 
         ### get WGCNA cut with edge density <= edge_density
@@ -284,10 +276,18 @@ network_reduction_by_pickHardThreshold <- function(adjacency_matrix,
         ))
 
         cut_estimate = wgcna_tresholds$cutEstimate
-
+        ### terminate execution if pickHardThreshold cannot find cutoff
+        if (is.na(cut_estimate)) {
+            message(format(Sys.time(), "[%y-%m-%d %X] "),
+                    "ERROR: WGCNA::pickHardThreshold failed to find a suitable cutoff with the given cut_vector at the given R^2 cutoff.
+                    Please, try a different cut_vetor or a different cutoff. Highest R^2 cutoff computed was ",
+                    round(max(wgcna_tresholds$fitIndices[wgcna_tresholds$fitIndices$slope.<0, "SFT.R.sq"], na.rm=T), 3), ".")
+            stop("WGCNA::pickHardThreshold failed to find a suitable cutoff with the given cut_vector at the given R^2 cutoff.
+                    Please, try a different cut_vetor or a different cutoff. Highest R^2 cutoff computed was ",
+                 round(max(wgcna_tresholds$fitIndices[wgcna_tresholds$fitIndices$slope.<0, "SFT.R.sq"], na.rm=T), 3), ".")
         ##### check if cut estimate was found and if slope at cut is negative
         ##### if true continue, else find a cut estimate with negative slope
-        if ((is.na(cut_estimate)==FALSE) & (wgcna_tresholds$fitIndices[wgcna_tresholds$fitIndices$Cut==cut_estimate,]$slope < 0)){
+        } else if ((is.na(cut_estimate)==FALSE) & (wgcna_tresholds$fitIndices[wgcna_tresholds$fitIndices$Cut==cut_estimate,]$slope < 0)){
             message(format(Sys.time(), "[%y-%m-%d %X] "), 'Cut Threshold: ', as.character(cut_estimate))
         } else {
             cut_estimate=NA
@@ -319,7 +319,7 @@ network_reduction_by_pickHardThreshold <- function(adjacency_matrix,
     cutEstimate <- cut_estimate
 
     ### set all entries below the threshold to NA
-    adjacency_matrix[abs(adjacency_matrix) < cutEstimate] <- NA
+    adjacency_matrix[abs(adjacency_matrix) < cutEstimate] <- -999
 
     return(adjacency_matrix)
 }

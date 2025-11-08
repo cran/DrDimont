@@ -1,7 +1,7 @@
 target_edge_list <- function(graph, target_nodes, group) {
     #' @title [INTERNAL] Get edges adjacent to target nodes
     #'
-    #' @description [INTERNAL] Based on the supplied graph and target nodes this function returns a
+    #' @description [INTERNAL] Based on the supplied graph and target nodes, this function returns a
     #' list of edges that are directly adjacent to target nodes. These edges can be used for further
     #' computation to compute the integrated interaction scores and differential scores in the networks.
     #'
@@ -11,11 +11,11 @@ target_edge_list <- function(graph, target_nodes, group) {
     #' whether the node is contained in the combined graph of the group)
     #' @param group [string] Indicates which group `groupA` or `groupB` is analyzed
     #' 
-    #' @return An edge list as a data frame.
+    #' @return An edge list as a dataframe.
     #' @importFrom rlang .data
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
 
     # filter for nodes contained in combined graph
     target_node_ids <- target_nodes[target_nodes[ , group], "node_id"]
@@ -32,26 +32,26 @@ target_edge_list <- function(graph, target_nodes, group) {
 find_targets <- function(graphs, target_molecules, interaction_table, annotation, on) {
     #' @title [INTERNAL] Filter drug target nodes
     #'
-    #' @description [INTERNAL] Based on the supplied target molecules, interaction table, graph and
-    #' annotation this function returns a data frame containing nodes in the network targeted by a
+    #' @description [INTERNAL] Based on the supplied target molecules, interaction table, graph, and
+    #' annotation this function returns a dataframe containing nodes in the network targeted by a
     #' drug and a list containing the drug names as names and a vector of node IDs as keys.
     #'
     #' @param graphs [list] List of two iGraph graph objects (one for each group)
     #' @param target_molecules [string] Identifies the type of the target molecules (e.g.,
-    #' `protein`). The string must be contained in the `type` column of the annotation data frame.
+    #' `protein`). The string must be contained in the `type` column of the annotation dataframe.
     #' @param interaction_table [data.frame] Specifying the interaction of drugs and target molecules.
     #' Must contain a column `drug_name` containing drug names/identifiers and a column named like
     #' the character string given in the `on` argument, which must be an identifier for the targeted
     #' molecule.
     #' @param annotation [data.frame] Contains the annotation for all the nodes contained in the
-    #' combined network. Must contain a column `node_id` (vertex IDs in iGraph graph object) and a
+    #' combined network. Must contain a column `node_id` (vertex IDs in the iGraph graph object) and a
     #' column named like the character string given in the `on` argument, which must be an identifier
     #' for the targeted molecule.
     #' @param on [string] Defines the ID that is used to match drugs to their targets. Both
-    #' supplied data frames (`annotation` and `interaction_table`) must contain a column named like
+    #' supplied dataframes (`annotation` and `interaction_table`) must contain a column named like
     #' this character string.
     #'
-    #' @return A named list. Element `target_nodes` is a data frame with column `node_id` (unique node
+    #' @return A named list. Element `target_nodes` is a dataframe with column `node_id` (unique node
     #' IDs in the iGraph graph object that are targeted by drugs) and columns `groupA` and `groupB`
     #' (bool values specifying whether the node is contained in the combined graph of the group).
     #' Element `drugs_to_target_nodes` contains a named list: elements are `drug_names` and contain a
@@ -59,7 +59,7 @@ find_targets <- function(graphs, target_molecules, interaction_table, annotation
     #' @importFrom rlang .data
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
 
     # filter annotation for components that appear in the interaction table
     target_annotation <-  annotation %>%

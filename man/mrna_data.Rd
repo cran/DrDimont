@@ -20,10 +20,10 @@ Krug, Karsten et al. “Proteogenomic Landscape of Breast Cancer Tumorigenesis a
 mrna_data
 }
 \description{
-mRNA analysis of breast cancer patients data from Krug et al. (2020) (data from the Clinical
+mRNA analysis of breast cancer patient data from Krug et al. (2020) (data from the Clinical
 Proteomic Tumor Analysis Consortium (CPTAC)). The data is stratified by estrogen receptor (ER)
 expression status (`groupA` = ER+, `groupB` = ER-). The data was reduced to 50 genes.
-For each group a data frame is given containing the raw data with the mRNA/gene as rows and the
+For each group, a dataframe is given containing the raw data with the mRNA/gene as rows and the
 samples as columns. The first column contains the gene identifiers (gene_name).
 }
 \keyword{datasets}

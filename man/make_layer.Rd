@@ -15,11 +15,11 @@ make_layer(
 \arguments{
 \item{name}{[string] Name of the layer.}
 
-\item{data_groupA, data_groupB}{[data.frame] Data frame containing raw molecular data of each group
+\item{data_groupA, data_groupB}{[data.frame] Dataframe containing raw molecular data of each group
 (each stratum). Analyzed components (e.g. genes) in columns, samples (e.g. patients) in rows.}
 
-\item{identifiers_groupA, identifiers_groupB}{[data.frame] Data frame containing component identifiers
-(columns) of each component (rows) in the same order as the molecular data frame of each group.
+\item{identifiers_groupA, identifiers_groupB}{[data.frame] Dataframe containing component identifiers
+(columns) of each component (rows) in the same order as the molecular dataframe of each group.
 These identifiers are used to (a) interconnect graphs and (b) match drugs to drug targets.
 Must contain a column `type` which identifies the nature of the component (e.g., "protein")}
 }

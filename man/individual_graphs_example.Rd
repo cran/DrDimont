@@ -18,15 +18,15 @@ A named list with 2 items.
     }
     \item{groupB}{same structure as `groupA`}
     }
-  \item{annotations}{A named list containing data frames of mappings of assigned node IDs to the
+  \item{annotations}{A named list containing dataframes of mappings of assigned node IDs to the
   user-provided component identifiers for nodes in `groupA` or `groupB` and all nodes}
   \describe{
   \item{groupA}{Annotations associated with `groupA`}
     \describe{
-    \item{mrna}{Data frame}
-    \item{protein}{Data frame}
-    \item{phosphosite}{Data frame}
-    \item{metabolite}{Data frame}
+    \item{mrna}{Dataframe}
+    \item{protein}{Dataframe}
+    \item{phosphosite}{Dataframe}
+    \item{metabolite}{Dataframe}
     }
   \item{groupB}{same structure as `groupA`}
   \item{both}{same structure as `groupA`}

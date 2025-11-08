@@ -1,19 +1,19 @@
 Package: DrDimont
 Type: Package
 Title: Drug Response Prediction from Differential Multi-Omics Networks
-Version: 0.1.4
+Version: 0.1.6
 Authors@R: c(
-  person("Katharina", "Baum", , "katharina.baum@hpi.de", role = "cre",
+  person("Katharina", "Baum", email = "katharina.baum@fu-berlin.de", role = "cre",
          comment = c(ORCID = "0000-0001-7256-0566")),
-  person("Pauline", "Hiort", , "pauline.hiort@hpi.de", role = "aut",
+  person("Pauline", "Hiort", email = "pauline.hiort@hpi.de", role = "aut",
          comment = c(ORCID = "0000-0002-3530-7358")),
-  person("Julian", "Hugo", , "julian.hugo@student.hpi.de", role = "aut",
+  person("Julian", "Hugo", role = "aut",
          comment = c(ORCID = "0000-0003-3355-1071")),
-  person("Spoorthi", "Kashyap", , "spoorthi.kashyap@student.hpi.de", role = "aut", 
+  person("Spoorthi", "Kashyap", role = "aut", 
          comment = c(ORCID = "0000-0002-5474-8183")),
-  person("Nataniel", "Müller", , "nataniel.mueller@student.hpi.de", role = "aut",
+  person("Nataniel", "Müller", role = "aut",
          comment = c(ORCID = "0000-0002-0275-3992")),
-  person("Justus", "Zeinert", , "justus.zeinert@student.hpi.de", role = "aut",
+  person("Justus", "Zeinert", role = "aut",
          comment = c(ORCID = "0000-0003-3918-0507"))
   )
 Description: While it has been well established that drugs affect and help
@@ -41,20 +41,20 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Imports: igraph, dplyr, stringr, WGCNA, Rfast, readr, tibble, tidyr,
         magrittr, rlang, utils, stats, reticulate
-Suggests: rmarkdown, knitr
+Suggests: GO.db, rmarkdown, knitr
 Depends: R (>= 3.5.0)
 NeedsCompilation: no
-Packaged: 2022-09-23 14:30:04 UTC; work
-Author: Katharina Baum [cre] (<https://orcid.org/0000-0001-7256-0566>),
-  Pauline Hiort [aut] (<https://orcid.org/0000-0002-3530-7358>),
-  Julian Hugo [aut] (<https://orcid.org/0000-0003-3355-1071>),
-  Spoorthi Kashyap [aut] (<https://orcid.org/0000-0002-5474-8183>),
-  Nataniel Müller [aut] (<https://orcid.org/0000-0002-0275-3992>),
-  Justus Zeinert [aut] (<https://orcid.org/0000-0003-3918-0507>)
-Maintainer: Katharina Baum <katharina.baum@hpi.de>
+Packaged: 2025-11-07 12:42:52 UTC; phiort1
+Author: Katharina Baum [cre] (ORCID: <https://orcid.org/0000-0001-7256-0566>),
+  Pauline Hiort [aut] (ORCID: <https://orcid.org/0000-0002-3530-7358>),
+  Julian Hugo [aut] (ORCID: <https://orcid.org/0000-0003-3355-1071>),
+  Spoorthi Kashyap [aut] (ORCID: <https://orcid.org/0000-0002-5474-8183>),
+  Nataniel Müller [aut] (ORCID: <https://orcid.org/0000-0002-0275-3992>),
+  Justus Zeinert [aut] (ORCID: <https://orcid.org/0000-0003-3918-0507>)
+Maintainer: Katharina Baum <katharina.baum@fu-berlin.de>
 Repository: CRAN
-Date/Publication: 2022-09-23 15:40:02 UTC
+Date/Publication: 2025-11-08 13:00:02 UTC

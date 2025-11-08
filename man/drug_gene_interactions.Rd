@@ -5,7 +5,7 @@
 \alias{drug_gene_interactions}
 \title{Drug-gene interactions}
 \format{
-A data frame with 4 columns.
+A dataframe with 4 columns.
 \describe{
   \item{gene_name}{Gene names of targeted protein-coding genes.}
   \item{drug_name}{Drug-names with known interactions.}
@@ -13,7 +13,7 @@ A data frame with 4 columns.
 }
 }
 \source{
-The Drug Gene Interaction Database: \url{https://www.dgidb.org/}
+The Drug Gene Interaction Database: \url{https://dgidb.org/}
 
 ChEMBL IDs: \url{https://www.ebi.ac.uk/chembl}
 }
@@ -21,7 +21,7 @@ ChEMBL IDs: \url{https://www.ebi.ac.uk/chembl}
 drug_gene_interactions
 }
 \description{
-Data frame providing interactions of drugs with genes. The data was downloaded from
+Dataframe providing interactions of drugs with genes. The data was downloaded from
 The Drug Gene Interaction Database.
 }
 \keyword{datasets}

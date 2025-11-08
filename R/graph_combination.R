@@ -8,11 +8,11 @@ inter_layer_edgelist_by_id <- function(annotation_A, annotation_B, connection, w
     #' @param connection [string] String of identifier to connect on
     #' @param weight [int|vector] Integer or vector specifying the weight of the inter-layer connections.
     #' 
-    #' @return Data frame with columns from, to and weight
+    #' @return Dataframe with columns from, to and weight
     #' @importFrom rlang .data
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
 
     inter_graph <- annotation_A %>%
         dplyr::inner_join(annotation_B, by = connection) %>%
@@ -38,11 +38,11 @@ inter_layer_edgelist_by_table <- function(annotation_A,
     #' @param weight_column [string] Name of the column in 'interaction_table' giving the weight of the
     #' inter-layer edges.
     #' 
-    #' @return Data frame with columns from, to and weight
+    #' @return Dataframe with columns from, to and weight
     #' @importFrom rlang .data
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
 
     id.x <- intersect(colnames(annotation_A), colnames(interaction_table))[1]
     id.y <- intersect(colnames(annotation_B), colnames(interaction_table))[1]
@@ -67,7 +67,7 @@ combine_graphs <- function(graphs, inter_layer_edgelists) {
     #' @return iGraph object which is the union of the input graphs with isolated nodes removed.
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
 
     all_inter_layer_edges <- dplyr::bind_rows(inter_layer_edgelists)
     inter_layer_edges <- as.vector(t(as.matrix(all_inter_layer_edges[ , 1:2])))

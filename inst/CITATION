@@ -1,9 +1,9 @@
 citHeader("To cite DrDimont in publications use:")
 
-citEntry(
-  entry    = "Article",
+bibentry(
+  bibtype    = "Article",
   title    = "DrDimont: Explainable drug response prediction from differential analysis of multi-omics networks",
-  author   = "Hiort, Pauline and Hugo, Julian and Zeinert, Justus and M{\"u}ller, Nataniel and Kashyap, Spoorthi and Rajapakse, Jagath C. and Azuaje, Francisco and Renard, Bernhard Y. and Baum, Katharina",
+  author   = "Hiort, Pauline and Hugo, Julian and Zeinert, Justus and M{\\\"{u}}ller, Nataniel and Kashyap, Spoorthi and Rajapakse, Jagath C. and Azuaje, Francisco and Renard, Bernhard Y. and Baum, Katharina",
   journal  = "Bioinformatics",
   year     = "2022",
   volume   = "38",
@@ -11,7 +11,4 @@ citEntry(
   pages    = "ii113–ii119",
   doi      = "10.1093/bioinformatics/btac477",
   url      = "https://doi.org/10.1093/bioinformatics/btac477",
-  textVersion = paste(
-
-  )
 )

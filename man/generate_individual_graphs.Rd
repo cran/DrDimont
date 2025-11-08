@@ -8,7 +8,7 @@ generate_individual_graphs(correlation_matrices, layers, settings)
 }
 \arguments{
 \item{correlation_matrices}{[list] List of correlation matrices generated with
-code{\link[DrDimont]{compute_correlation_matrices}}}
+\code{\link[DrDimont]{compute_correlation_matrices}}}
 
 \item{layers}{[list] Named list with different network layers containing data and
 identifiers for both groups (generated from \code{\link[DrDimont]{make_layer}})}
@@ -20,7 +20,7 @@ adjusted as desired.}
 \value{
 A nested named list with first-level elements `graphs` and `annotations`. The second
 level elements are `groupA` and `groupB` (and `both` at `annotations`). These contain a list of
-iGraph objects (`graphs`) and data frames (`annotations`) mapping the graph node IDs to biological
+iGraph objects (`graphs`) and dataframes (`annotations`) mapping the graph node IDs to biological
 identifiers. The third level elements are layer names given by the user.
 }
 \description{
@@ -51,7 +51,5 @@ example_individual_graphs <- generate_individual_graphs(
                                  layers=layers_example, 
                                  settings=example_settings)
 
-graph_metrics(example_individual_graphs$graphs$groupA$mrna)
-graph_metrics(example_individual_graphs$graphs$groupB$mrna)
 
 }

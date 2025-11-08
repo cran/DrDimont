@@ -10,7 +10,7 @@ determine_drug_targets(graphs, annotations, drug_target_interactions, settings)
 \item{graphs}{[list] A named list with elements `groupA` and `groupB` containing the combined graphs
 of each group as iGraph object (`graphs` from output of \code{\link[DrDimont]{generate_combined_graphs}})}
 
-\item{annotations}{[list] List of data frames that map node IDs to identifiers. Contains `both`
+\item{annotations}{[list] List of dataframes that map node IDs to identifiers. Contains `both`
 with unique identifiers across the whole data (output of \code{\link[DrDimont]{generate_combined_graphs}})}
 
 \item{drug_target_interactions}{[list] Named list specifying drug target interactions for drug response
@@ -23,7 +23,7 @@ adjusted as desired.}
 \value{
 A named list with elements `targets` and `edgelists`.
 `targets` is a named list with elements `target_nodes` and `drugs_to_target_nodes`.
-`target_nodes` is a data frame with column `node_id` (unique node IDs in the iGraph object
+`target_nodes` is a dataframe with column `node_id` (unique node IDs in the iGraph object
 targeted by drugs) and columns `groupA` and `groupB` (bool values specifying whether the
 node is contained in the combined graph of the group). Element `drugs_to_target_nodes` contains
 a named list mapping drug names to a vector of their target node IDs.

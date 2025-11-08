@@ -16,11 +16,9 @@ drdimont_settings(
   edge_density = NULL,
   p_value_adjustment_method = "BH",
   reduction_alpha = 0.05,
-  n_threads = 1,
-  parallel_chunk_size = 10^6,
-  print_graph_info = TRUE,
   conda = FALSE,
   max_path_length = 3,
+  num_cpus = 1,
   int_score_mode = "auto",
   cluster_address = "auto",
   median_drug_response = FALSE,
@@ -29,7 +27,7 @@ drdimont_settings(
 )
 }
 \arguments{
-\item{saving_path}{[string] Path to save intermediate output of DrDimont's functions. Default is temporary folder.}
+\item{saving_path}{[string] Path to save intermediate output of DrDimont's functions. Default: temporary folder.}
 
 \item{save_data}{[bool] 
 Save intermediate data such as correlation_matrices, individual_graphs, etc. during exectution of DrDimont. (default: FALSE)}
@@ -54,7 +52,7 @@ for all layers, else a named list mapping layer names to methods (see \code{hand
 Layers may be omitted if a method is mapped to `default`. (default: pickHardThreshold)}
 
 \item{r_squared_cutoff}{pickHardThreshold setting: [float|named list]
-Minimum scale free topology fitting index R^2 for reduction using
+Minimum scale-free topology fitting index R^2 for reduction using
 \code{\link[WGCNA]{pickHardThreshold}}.
 Can be a single float number if the same for all layers, else a named list mapping layer names to a cutoff
 (see \code{handling_missing_data} setting) or a named list in a named list mapping groupA or groupB and layer
@@ -63,7 +61,7 @@ names to a cutoff, e.g.,
 Layers/groups may be omitted if a cutoff is mapped to `default`. (default: 0.85)}
 
 \item{cut_vector}{pickHardThreshold setting: [sequence of float|named list]
-Vector of hard threshold cuts for which the scale free topology fit indices are calculated during
+Vector of hard threshold cuts for which the scale-free topology fit indices are calculated during
 reduction with \code{\link[WGCNA]{pickHardThreshold}}.
 Can be a single regular sequence if the same for all layers, else a named list mapping layer names 
 to a cut vector or a named list in a named list mapping groupA or groupB and layer names to a cut 
@@ -71,7 +69,7 @@ vector (see \code{r_squared_cutoff} setting). Layers/groups may be omitted if a 
 to `default`. (default: seq(0.2, 0.8, by = 0.01))}
 
 \item{mean_number_edges}{pickHardThreshold setting: [int|named list] 
-Maximal mean number edges threshold to find a suitable edge weight cutoff employing
+Maximal mean number of edges threshold to find a suitable edge weight cutoff employing
 \code{\link[WGCNA]{pickHardThreshold}} to reduce the network to at most the specified mean number of edges.
 Can be a single int number if the same for all layers, else a named list mapping layer names to a mean number of edges or
 a named list in a named list mapping groupA or groupB and layer names to a cutoff (see \code{r_squared_cutoff} setting).
@@ -91,16 +89,6 @@ Correction method applied to p-values. Passed to \link[stats]{p.adjust}. (defaul
 Significance value for correlation p-values
 during reduction. Not-significant edges are dropped. (default: 0.05)}
 
-\item{n_threads}{p_value setting: [int] 
-Number of threads for parallel computation of p-values during p-value reduction. (default: 1)}
-
-\item{parallel_chunk_size}{p_value setting: [int] 
-Number of p-values in smallest work unit when computing in parallel
-during network reduction with method `p_value`. (default: 10^6)}
-
-\item{print_graph_info}{[bool] 
-Print summary of the reduced graph to the console after network generation. (default: TRUE)}
-
 \item{conda}{[bool] 
 Python installation in conda environment. Set TRUE if Python is installed with conda. (default: FALSE)}
 
@@ -108,13 +96,16 @@ Python installation in conda environment. Set TRUE if Python is installed with c
 Integer of maximum length of simple paths to include in the
 \code{\link[DrDimont]{generate_interaction_score_graphs}} computation. (default: 3)}
 
-\item{int_score_mode}{["auto"|"sequential"|"ray"] 
-Interaction score sequential or parallel ("ray") computation. For parallel computation the Python library Ray ist used. 
-When set to `auto` computation depends on the  graph sizes. (default: "auto")}
+\item{num_cpus}{[int] 
+Number of CPUs to use for parallel computation for interaction scores. (default: 1)}
 
-\item{cluster_address}{[string] Local node IP-address of Ray if executed on a cluster.
+\item{int_score_mode}{["auto"|"sequential"|"ray"] 
+Interaction score sequential or parallel ("ray") computation. For parallel computation, the Python library Ray is used. 
+When set to `auto`, computation depends on the graph sizes. (default: "auto")}
+
+\item{cluster_address}{[string] (deprecated; will be removed in future versions) Local node IP address of Ray if executed on a cluster.
 On a cluster: Start ray with \code{ray start --head --num-cpus 32} on the console before DrDimont execution.
-It should work with "auto", if it does not specify IP-address given by the \code{ray start} command. (default: "auto")}
+It should work with "auto", if it does not specify an IP address given by the \code{ray start} command. (default: "auto")}
 
 \item{median_drug_response}{[bool] 
 Computation of median (instead of mean) of a drug's targets differential scores (default: FALSE)}

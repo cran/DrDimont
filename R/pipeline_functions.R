@@ -36,10 +36,10 @@ make_layer <- function(name, data_groupA, data_groupB, identifiers_groupA, ident
     #' \code{\link[DrDimont]{run_pipeline}}.
     #'
     #' @param name [string] Name of the layer.
-    #' @param data_groupA,data_groupB [data.frame] Data frame containing raw molecular data of each group
+    #' @param data_groupA,data_groupB [data.frame] Dataframe containing raw molecular data of each group
     #' (each stratum). Analyzed components (e.g. genes) in columns, samples (e.g. patients) in rows.
-    #' @param identifiers_groupA,identifiers_groupB [data.frame] Data frame containing component identifiers
-    #' (columns) of each component (rows) in the same order as the molecular data frame of each group.
+    #' @param identifiers_groupA,identifiers_groupB [data.frame] Dataframe containing component identifiers
+    #' (columns) of each component (rows) in the same order as the molecular dataframe of each group.
     #' These identifiers are used to (a) interconnect graphs and (b) match drugs to drug targets.
     #' Must contain a column `type` which identifies the nature of the component (e.g., "protein")
     #'
@@ -149,7 +149,7 @@ make_drug_target <- function(target_molecules, interaction_table, match_on) {
     #' the protein layer (see \code{\link[DrDimont]{make_layer}}), this column should be called
     #' `ncbi_id` and contain the corresponding IDs of protein-drug targets. Any other ID present in
     #' the constructed layer could also be used.
-    #' @param match_on [string] Column name of the data frame supplied in `interaction_table` that is used for
+    #' @param match_on [string] Column name of the dataframe supplied in `interaction_table` that is used for
     #' matching drugs and target nodes in the graph (e.g. `ncbi_id`).
     #'
     #' @return Named list of the input parameters in input format of \code{\link[DrDimont]{run_pipeline}}.
@@ -191,7 +191,7 @@ run_pipeline <- function(layers, inter_layer_connections, drug_target_interactio
     #' \code{\link[DrDimont]{generate_interaction_score_graphs}} requires saving large-scale graphs to file and calling
     #' a Python script. This handover may take time.
     #'
-    #' Eventually a data frame is returned containing the supplied drug name and its associated
+    #' Eventually a dataframe is returned containing the supplied drug name and its associated
     #' differential drug response score computed by DrDimont.
     #'
     #' @param layers [list] Named list with different network layers containing data and identifiers for
@@ -209,7 +209,7 @@ run_pipeline <- function(layers, inter_layer_connections, drug_target_interactio
     #' initialized by \code{\link[DrDimont]{drdimont_settings}}. Items in the named list can be
     #' adjusted as desired.
     #'
-    #' @return Data frame containing drug name and associated differential integrated drug response score.
+    #' @return Dataframe containing drug name and associated differential integrated drug response score.
     #' If Python is not installed or the interaction score computation fails for some other reason, NULL
     #' is returned instead.
     #' 
@@ -256,11 +256,6 @@ run_pipeline <- function(layers, inter_layer_connections, drug_target_interactio
     return_errors(check_input(layers, inter_layer_connections, drug_target_interactions))
     message(format(Sys.time(), "[%y-%m-%d %X] "), "done.\n")
 
-    if (any(settings$reduction_method_layers=="p_value") && settings$n_threads > 1 && is.null(parallel::getDefaultCluster())) {
-        set_cluster(settings$n_threads)
-    }
-
-
     message(format(Sys.time(), "[%y-%m-%d %X] "), "### STEP 1: Computing correlation matrices ###")
     correlation_matrices <- compute_correlation_matrices(layers, settings)
 
@@ -304,8 +299,6 @@ run_pipeline <- function(layers, inter_layer_connections, drug_target_interactio
 
     message(format(Sys.time(), "[%y-%m-%d %X] "), "### Pipeline completed. ###")
 
-    if (!is.null(parallel::getDefaultCluster())){shutdown_cluster()}
-
     return(drug_response_scores)
 
 }
@@ -327,7 +320,7 @@ compute_correlation_matrices <- function(layers, settings) {
     #'
     #' @return A nested named list with first-level elements `correlation_matrices` and `annotations`. The second
     #' level elements are `groupA` and `groupB` (and `both` at `annotations`). These contain a named list of matrix
-    #' objects (`correlation_matrices`) and data frames (`annotations`) mapping the graph node IDs to biological
+    #' objects (`correlation_matrices`) and dataframes (`annotations`) mapping the graph node IDs to biological
     #' identifiers. The third level elements are the layer names given by the user.
     #' @export
     #'
@@ -359,7 +352,7 @@ compute_correlation_matrices <- function(layers, settings) {
     ### empty list to store correlation matrices of individual layers
     adjacency_matrices <- list()
 
-    ### empty list to store annotation data frames
+    ### empty list to store annotation dataframes
     layer_annotations <- list()
 
     ### iterate over layers
@@ -391,7 +384,11 @@ compute_correlation_matrices <- function(layers, settings) {
             adjacency_matrix <- WGCNA::cor(get_layer(layer, layers)[[group]][['data']],
                                            method=settings$correlation_method,
                                            use=handling_missing_data)
-
+            
+            ### add row and column names
+            rownames(adjacency_matrix) <- paste0("X", 1:nrow(adjacency_matrix))
+            colnames(adjacency_matrix) <- paste0("X", 1:ncol(adjacency_matrix))
+            
             message(format(Sys.time(), "[%y-%m-%d %X] "), "done.\n")
 
             ### save adjacency_matrix in 'adjacency_matrices' as named list
@@ -421,7 +418,7 @@ generate_individual_graphs <- function(correlation_matrices, layers, settings) {
     #' correlation or a minimum scale-free fit index.
     #'
     #' @param correlation_matrices [list] List of correlation matrices generated with
-    #' code{\link[DrDimont]{compute_correlation_matrices}}
+    #' \code{\link[DrDimont]{compute_correlation_matrices}}
     #' @param layers [list] Named list with different network layers containing data and
     #' identifiers for both groups (generated from \code{\link[DrDimont]{make_layer}})
     #' @param settings [list] A named list containing pipeline settings. The settings list has to be
@@ -430,7 +427,7 @@ generate_individual_graphs <- function(correlation_matrices, layers, settings) {
     #'
     #' @return A nested named list with first-level elements `graphs` and `annotations`. The second
     #' level elements are `groupA` and `groupB` (and `both` at `annotations`). These contain a list of
-    #' iGraph objects (`graphs`) and data frames (`annotations`) mapping the graph node IDs to biological
+    #' iGraph objects (`graphs`) and dataframes (`annotations`) mapping the graph node IDs to biological
     #' identifiers. The third level elements are layer names given by the user.
     #'
     #' @examples
@@ -454,8 +451,6 @@ generate_individual_graphs <- function(correlation_matrices, layers, settings) {
     #'                                  layers=layers_example, 
     #'                                  settings=example_settings)
     #'
-    #' graph_metrics(example_individual_graphs$graphs$groupA$mrna)
-    #' graph_metrics(example_individual_graphs$graphs$groupB$mrna)
     #' 
     #' @export
 
@@ -463,7 +458,7 @@ generate_individual_graphs <- function(correlation_matrices, layers, settings) {
     ### empty list to store igraph objects of individual layers and inter-layer connections
     graphs <- list()
 
-    ### empty list to store annotation data frames
+    ### empty list to store annotation dataframes
     annotations <- list()
 
     ### iterate over layers
@@ -520,10 +515,7 @@ generate_individual_graphs <- function(correlation_matrices, layers, settings) {
                                                   mean_number_edges=mean_number_edges,
                                                   edge_density=edge_density,
                                                   p_value_adjustment_method=settings$p_value_adjust_method,
-                                                  reduction_alpha=settings$reduction_alpha,
-                                                  n_threads=settings$n_threads,
-                                                  parallel_chunk_size=settings$parallel_chunk_size,
-                                                  print_graph_info=settings$print_graph_info)
+                                                  reduction_alpha=settings$reduction_alpha)
 
             ### save graph in 'graphs' as named list
             graphs[[group]][[layer]] <- layer_graph
@@ -555,7 +547,7 @@ generate_combined_graphs <- function(graphs, annotations, inter_layer_connection
     #' @param graphs [list] A named list (elements `groupA` and `groupB`). Each element contains a list of
     #' iGraph objects (`graphs` from output of \code{\link[DrDimont]{generate_individual_graphs}}).
     #' @param annotations [list] A named list (elements `groupA`, `groupB` and `both`). Each element contains a
-    #' list of data frames mapping each node IDs to identifiers. `both` contains unique identifiers across the
+    #' list of dataframes mapping each node IDs to identifiers. `both` contains unique identifiers across the
     #' whole data. (`annotations` from output of \code{\link[DrDimont]{generate_individual_graphs}})
     #' @param inter_layer_connections [list] Named list with specified inter-layer connections. Names are
     #' layer names and elements are connections (\link[DrDimont]{make_connection}).
@@ -677,8 +669,7 @@ generate_combined_graphs <- function(graphs, annotations, inter_layer_connection
             }
             graphs_combined[[group]] <- graphs[[group]][[layer]]
         }
-    }
-    else {
+    } else {
 
         message(format(Sys.time(), "[%y-%m-%d %X] "), "Combining graphs...")
 
@@ -719,7 +710,7 @@ determine_drug_targets <- function(graphs, annotations, drug_target_interactions
     #'
     #' @param graphs [list] A named list with elements `groupA` and `groupB` containing the combined graphs
     #' of each group as iGraph object (`graphs` from output of \code{\link[DrDimont]{generate_combined_graphs}})
-    #' @param annotations [list] List of data frames that map node IDs to identifiers. Contains `both`
+    #' @param annotations [list] List of dataframes that map node IDs to identifiers. Contains `both`
     #' with unique identifiers across the whole data (output of \code{\link[DrDimont]{generate_combined_graphs}})
     #' @param drug_target_interactions [list] Named list specifying drug target interactions for drug response
     #'  score computation
@@ -729,7 +720,7 @@ determine_drug_targets <- function(graphs, annotations, drug_target_interactions
     #'
     #' @return A named list with elements `targets` and `edgelists`.
     #' `targets` is a named list with elements `target_nodes` and `drugs_to_target_nodes`.
-    #' `target_nodes` is a data frame with column `node_id` (unique node IDs in the iGraph object
+    #' `target_nodes` is a dataframe with column `node_id` (unique node IDs in the iGraph object
     #' targeted by drugs) and columns `groupA` and `groupB` (bool values specifying whether the
     #' node is contained in the combined graph of the group). Element `drugs_to_target_nodes` contains
     #' a named list mapping drug names to a vector of their target node IDs.
@@ -803,7 +794,7 @@ generate_interaction_score_graphs <- function(graphs, drug_target_edgelists, set
     #' score computation is expensive and slow because it involves finding all simple paths up to a
     #' certain length between source and target node of the drug target edges. Don't set the parameter `max_path_length`
     #' in \code{\link[DrDimont]{drdimont_settings}} to a large value and only consider this step if your graphs have approximately
-    #' 2 million edges or less. Computation is initiated by \code{\link[DrDimont]{calculate_interaction_score}}.
+    #' 2 million edges or less. 
     #' The Python script is parallelized using Ray. Use the \code{\link[DrDimont]{drdimont_settings}} parameter `int_score_mode` to force sequential
     #' or parallel computation. Refer to the Ray documentation if you encounter problems with running
     #' the Python script in parallel. DISCLAIMER: Depending on the operating system Python comes
@@ -816,7 +807,7 @@ generate_interaction_score_graphs <- function(graphs, drug_target_edgelists, set
     #' @param graphs [list] A named list with elements `groupA` and `groupB` containing the combined graphs
     #' of each group as iGraph object (`graphs` from output of \code{\link[DrDimont]{generate_combined_graphs}})
     #' @param drug_target_edgelists [list] A named list (elements `groupA` and `groupB`). Each element
-    #' contains the list of edges adjacent to drug targets as a data frame (columns `from`, `to` and
+    #' contains the list of edges adjacent to drug targets as a dataframe (columns `from`, `to` and
     #' `weight`). `edgelists` from output of \code{\link[DrDimont]{determine_drug_targets}}
     #' @param settings [list] A named list containing pipeline settings. The settings list has to be
     #' initialized by \code{\link[DrDimont]{drdimont_settings}}. Items in the named list can be
@@ -857,8 +848,8 @@ generate_interaction_score_graphs <- function(graphs, drug_target_edgelists, set
     ### run the Python script for interaction score calculation
     tryCatch({
         message(format(Sys.time(), "[%y-%m-%d %X] "), "Running Python script for interaction score computation.")
-        calculate_interaction_score(settings$max_path_length, total_edges, settings$saving_path,
-                                    settings$conda, settings$script_path, settings$int_score_mode, 
+        calculate_interaction_score(settings$max_path_length, total_edges, settings$saving_path, settings$conda, 
+                                    settings$script_path, settings$num_cpus, settings$int_score_mode, 
                                     settings$cluster_address, graphB_null)
 
         message(format(Sys.time(), "[%y-%m-%d %X] "), "Loading data...")
@@ -1007,7 +998,7 @@ compute_drug_response_scores <- function(differential_graph, drug_targets, setti
     #' initialized by \code{\link[DrDimont]{drdimont_settings}}. Items in the named list can be
     #' adjusted as desired.
     #'
-    #' @return Data frame containing drug name and associated differential (integrated) drug response score
+    #' @return Dataframe containing drug name and associated differential (integrated) drug response score
     #' 
     #' @examples
     #' data(drug_target_edges_example)
@@ -1071,7 +1062,7 @@ compute_drug_response_scores <- function(differential_graph, drug_targets, setti
         else if (!median_drug_response & absolute_difference) { score <- mean(abs(targets_edges$differential_interaction_score)) }
         else if (!median_drug_response & !absolute_difference) { score <- mean(targets_edges$differential_interaction_score) }
 
-        ### save the drug's response score in data frame
+        ### save the drug's response score in dataframe
         drug_response_scores["drug_response_score"][drug_response_scores["drug_name"] == drug] <- abs(score)
     }
 

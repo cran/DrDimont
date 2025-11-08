@@ -17,7 +17,7 @@ adjusted as desired.}
 \value{
 A nested named list with first-level elements `correlation_matrices` and `annotations`. The second
 level elements are `groupA` and `groupB` (and `both` at `annotations`). These contain a named list of matrix
-objects (`correlation_matrices`) and data frames (`annotations`) mapping the graph node IDs to biological
+objects (`correlation_matrices`) and dataframes (`annotations`) mapping the graph node IDs to biological
 identifiers. The third level elements are the layer names given by the user.
 }
 \description{

@@ -7,8 +7,8 @@
 lhs \%>\% rhs
 }
 \value{
-Evaluates and returns the output of the function on the right hand 
-side with the left hand side as first argument.
+Evaluates and returns the output of the function on the right-hand 
+side with the left-hand side as the first argument.
 }
 \description{
 See \code{magrittr::\link[magrittr:pipe]{\%>\%}} for details.

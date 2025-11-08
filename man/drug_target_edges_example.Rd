@@ -9,19 +9,19 @@ A named list with 2 items.
 \describe{
   \item{targets}{A named list}
   \describe{
-  \item{target_nodes}{data frame with column `node_id` (unique node IDs in the graph targeted by
+  \item{target_nodes}{dataframe with column `node_id` (unique node IDs in the graph targeted by
    drugs) and columns `groupA` and `groupB` (bool values specifying whether the node is
    contained in the combined graph of the group)}
   \item{drugs_to_target_nodes}{Element `drugs_to_target_nodes` contains a named list mapping drug
    names to a vector of their target node IDs.}
   }
-  \item{edgelists}{Contains elements `groupA` and `groupB` containing each a data frame of edges
-  adjacent to drug target nodes each. Each edgelist data frame contains columns `from`, `to` and
+  \item{edgelists}{Contains elements `groupA` and `groupB` containing each a dataframe of edges
+  adjacent to drug target nodes each. Each edgelist dataframe contains columns `from`, `to`, and
   `weight`.}
 }
 }
 \source{
-The Drug Gene Interaction Database: \url{https://www.dgidb.org/}
+The Drug Gene Interaction Database: \url{https://dgidb.org/}
 }
 \usage{
 drug_target_edges_example

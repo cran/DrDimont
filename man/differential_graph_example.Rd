@@ -24,7 +24,7 @@ Consists of one graph containing edge attributes: the differential correlation v
 \details{
 A subset of the original data by Krug et al. (2020) and randomly sampled metabolite
 data from \code{\link[DrDimont]{layers_example}} was used to generate the correlation
-matrices, individual graphs and combined graphs. They were created from data
+matrices, individual graphs, and combined graphs. They were created from data
 stratified by estrogen receptor (ER) status: `groupA` contains data of ER+
 patients and `groupB` of ER- patients.
 }

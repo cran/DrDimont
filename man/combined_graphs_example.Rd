@@ -12,11 +12,11 @@ A named list with 2 items.
     \item{groupA}{Graph associated with `groupA`}
     \item{groupB}{Graph associated with `groupB`}
     }
-  \item{annotations}{A data frame of mappings of assigned node IDs to the
+  \item{annotations}{A dataframe of mappings of assigned node IDs to the
   user-provided component identifiers for all nodes in `groupA` and `groupB` together
   and all layers}
   \describe{
-  \item{both}{Data frame}
+  \item{both}{Dataframe}
   }
 }
 }
@@ -40,7 +40,7 @@ using the \link[DrDimont]{individual_graphs_example} and:
 
 A subset of the original data by Krug et al. (2020) and randomly sampled metabolite
 data from \code{\link[DrDimont]{layers_example}} was used to generate the correlation
-matrices, individual graphs and combined graphs. They were created from data
+matrices, individual graphs, and combined graphs. They were created from data
 stratified by estrogen receptor (ER) status: `groupA` contains data of ER+
 patients and `groupB` of ER- patients.
 }

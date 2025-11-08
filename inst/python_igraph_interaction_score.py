@@ -66,7 +66,7 @@ def sequential_interaction_score(max_path_length: int, graph: igraph.Graph, edge
     progress_bar.close()
 
 
-def distributed_interaction_score(max_path_length: int, graph: igraph.Graph, edge_list_reader: csv.reader, cluster_address=None):
+def distributed_interaction_score(max_path_length: int, graph: igraph.Graph, edge_list_reader: csv.reader, num_cpus: int, cluster_address: str = "auto"):
     """Computes interaction score in parallel using a ray cluster and adds it to graph as attribute.
 
     Arguments:
@@ -82,8 +82,8 @@ def distributed_interaction_score(max_path_length: int, graph: igraph.Graph, edg
 
     parallel_single_edge_interaction_score = ray.remote(single_edge_interaction_score)
 
-    if cluster_address == "None":
-        ray.init(include_dashboard=False, num_cpus=3)
+    if cluster_address == "auto":
+        ray.init(include_dashboard=False, num_cpus=num_cpus)
     else:
         ray.init(address=cluster_address, include_dashboard=False)
     remote_graph = ray.put(graph)
@@ -104,23 +104,26 @@ def main():
     parser.add_argument("edge_list_file", help="file containing the list of edges to calculate the interaction score for in tsv format (source,target,weight)")
     parser.add_argument("max_path_length", default=3, help="maximum length of simple paths considered for score computation")
     parser.add_argument("--output", default="int_score_graph.gml", help="output file name, graph with score in gml format")
-    parser.add_argument("--cluster_address", default="None", help="address of ray cluster, if a cluster is used")
+    parser.add_argument("--num_cpus", default=1, help="number of cpus to use for parallel computation")
+    parser.add_argument("--cluster_address", default="auto", help="address of ray cluster, if a cluster is used")
     parser.add_argument("--distributed", action="store_const", const=True, default=False, help="run in parallel with ray")
     args = parser.parse_args()
 
     graph = igraph.read(args.graph_file, format="gml")
+    max_path_length = int(args.max_path_length)
+    num_cpus = int(args.num_cpus)
 
     with open(args.edge_list_file, "r") as el_file:
         edge_list_reader = csv.reader(el_file, delimiter="\t")
         next(edge_list_reader)  # skip header
-        if args.distributed:
-            distributed_interaction_score(int(args.max_path_length), graph, edge_list_reader, args.cluster_address)
+        if args.distributed and num_cpus > 1:
+            distributed_interaction_score(max_path_length, graph, edge_list_reader, num_cpus, args.cluster_address)
         else:
             with open(args.edge_list_file, "r") as temp_el_file:
                 num_edges = sum(1 for _ in temp_el_file)
-            sequential_interaction_score(int(args.max_path_length), graph, edge_list_reader, num_edges)
+            sequential_interaction_score(max_path_length, graph, edge_list_reader, num_edges)
     graph.save(args.output, format="gml")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

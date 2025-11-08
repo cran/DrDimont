@@ -4,11 +4,11 @@ check_layer <- function(layer) {
     #' @description [INTERNAL] Checks if the data used to create a network layer is valid and has the right
     #' format
     #'
-    #' @param layer [list] Named list of layer to check. Created by \code{\link[DrDimont]{make_layer}}
+    #' @param layer [list] Named list of layers to check. Created by \code{\link[DrDimont]{make_layer}}
     #' @return Character string vector containing error messages.
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
     
     errors <- c()
     for (group in c("groupA", "groupB")) {
@@ -23,7 +23,7 @@ check_layer <- function(layer) {
       
         ### check if data is numerical matrix
         if (!is.numeric(as.matrix(layer[[group]][['data']]))) {
-          errors <- c(errors, stringr::str_interp("Layer \"${layer[['name']]}\", group \"${group}\": The supplied data is not numeric. Please check your data. Numerical data is requiered."))
+          errors <- c(errors, stringr::str_interp("Layer \"${layer[['name']]}\", group \"${group}\": The supplied data is not numeric. Please check your data. Numerical data is required."))
         }
       
         ### check if the identifiers contain an id called 'layer', layer attribute is assigned in the pipeline
@@ -33,7 +33,7 @@ check_layer <- function(layer) {
         
         ### check for duplicates in identifiers
         if (sum(duplicated(layer[[group]][['identifiers']])) > 0){
-          errors <- c(errors, stringr::str_interp("Layer \"${layer[['name']]}\", group \"${group}\": Duplicate entries given in `identifiers` data frame. This may cause ERRORS!"))
+          errors <- c(errors, stringr::str_interp("Layer \"${layer[['name']]}\", group \"${group}\": Duplicate entries given in `identifiers` dataframe. This may cause ERRORS!"))
         }
       
         message(format(Sys.time(), "[%y-%m-%d %X] "), stringr::str_interp("Layer \"${layer[['name']]}\", group \"${group}\" contains "), 
@@ -53,7 +53,7 @@ check_connection <- function(connection) {
     #' @return Character string vector containing error messages.
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
 
     errors <- c()
 
@@ -72,7 +72,7 @@ check_connection <- function(connection) {
         errors <- c(errors, stringr::str_interp("Connection \"${connection$from} - ${connection$to}\": The `to` argument has to be a character string and not contain more than one element."))
     }
 
-    ### check if arguments 'connect_on' and 'weight' are in correct format if connection by 'id' given
+    ### check if arguments 'connect_on' and 'weight' are in the correct format if connection by 'id' given
     if (connection$by == "id") {
       
         if (!length(connection$connect_on) == 1) {
@@ -80,24 +80,24 @@ check_connection <- function(connection) {
         }
       
         if (!is.numeric(connection$weight)) {
-            errors <- c(errors, stringr::str_interp("Connection \"${connection$from} - ${connection$to}\": If `connect_on` is a character string `weight` has to be numeric. Argument `weight` is set to: ${connection$weight}."))
+            errors <- c(errors, stringr::str_interp("Connection \"${connection$from} - ${connection$to}\": If `connect_on` is a character string, `weight` has to be numeric. Argument `weight` is set to: ${connection$weight}."))
         }
     }
-    ### check if arguments 'connect_on' and 'weight' are in correct format if connection by 'table' given
+    ### check if arguments 'connect_on' and 'weight' are in the correct format if connection by 'table' given
     else if (connection$by == "table") {
 
         if (!is.character(connection$weight) || !is.vector(connection$weight) || !length(connection$weight) == 1) {
-            errors <- c(errors, stringr::str_interp("Connection \"${connection$from} - ${connection$to}\": The argument `weight` is expected to contain the name of one column in the data frame passed as `connect_on`. Argument `weight` is set to: ${connection$weight}."))
+            errors <- c(errors, stringr::str_interp("Connection \"${connection$from} - ${connection$to}\": The argument `weight` is expected to contain the name of one column in the dataframe passed as `connect_on`. Argument `weight` is set to: ${connection$weight}."))
         }
       
         ### check if column names can be retrieved
         tryCatch(colnames(connection$connect_on),
-            error = function(e) errors <- c(errors, "Connection \"${connection$from} - ${connection$to}\": Couldn't get column names of `connect_on`. Argument seems malformed. Make sure the argument passed to `connect_on` is a character string or a data frame.")
+            error = function(e) errors <- c(errors, "Connection \"${connection$from} - ${connection$to}\": Couldn't get column names of `connect_on`. The argument seems malformed. Make sure the argument passed to `connect_on` is a character string or a dataframe.")
         )
 
         ### check if argument 'weight' can be found in table
         if (!(connection$weight %in% colnames(connection$connect_on))) {
-            errors <- c(errors, stringr::str_interp("Connection \"${connection$from} - ${connection$to}\": The argument `weight` is expected to contain the name of one column in the data frame passed as `connect_on`. Argument `weight` is set to: ${connection$weight}. The column names are: ${toString(colnames(connection$connect_on))}."))
+            errors <- c(errors, stringr::str_interp("Connection \"${connection$from} - ${connection$to}\": The argument `weight` is expected to contain the name of one column in the dataframe passed as `connect_on`. Argument `weight` is set to: ${connection$weight}. The column names are: ${toString(colnames(connection$connect_on))}."))
         }
         
         else {
@@ -109,13 +109,13 @@ check_connection <- function(connection) {
           
           ### check if duplicate entries are given in the table passed to 'connect_on'
           if (sum(duplicated(connection$connect_on[, !names(connection$connect_on) %in% c(connection$weight)]))>0){
-            errors <- c(errors, stringr::str_interp("Connection \"${connection$from} - ${connection$to}\": Duplicate entries found in the data frame specified in `connect_on`. This may cause ERRORS!"))
+            errors <- c(errors, stringr::str_interp("Connection \"${connection$from} - ${connection$to}\": Duplicate entries found in the dataframe specified in `connect_on`. This may cause ERRORS!"))
           }
         }
       
     }
     else if (connection$by == "none") {
-        errors <- c(errors, stringr::str_interp("Connection \"${connection$from} - ${connection$to}\": The argument `connect_on` has to be character string or a data frame. Argument `connect_on` is set to: ${connection$connect_on}."))
+        errors <- c(errors, stringr::str_interp("Connection \"${connection$from} - ${connection$to}\": The argument `connect_on` has to be a character string or a dataframe. Argument `connect_on` is set to: ${connection$connect_on}."))
     }
 
     return(errors)
@@ -135,7 +135,7 @@ check_sensible_connections <- function(connection, layers) {
     #' @return Character string vector containing error messages.
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
     
     errors <- c()
     layer_names <- c()
@@ -184,7 +184,7 @@ check_sensible_connections <- function(connection, layers) {
                     ### check if column names in table passed to 'connect_on' can be found in identifiers of layers and groups
                     identifier_cols <- colnames(layers[[which(layer_names == layer)]][[group]][['identifiers']])
                     if (!any(colnames(connection$connect_on) %in% identifier_cols)) {
-                        errors <- c(errors, stringr::str_interp("Connection \"${connection$from} - ${connection$to}\": None of the column names supplied in `connect_on` data frame were found in the identifiers of layer \"${layer}\" of group \"${group}\". Column names in `connect_on` are: ${toString(colnames(connection$connect_on))}. Identifiers are: ${toString(identifier_cols)}."))
+                        errors <- c(errors, stringr::str_interp("Connection \"${connection$from} - ${connection$to}\": None of the column names supplied in `connect_on` dataframe were found in the identifiers of layer \"${layer}\" of group \"${group}\". Column names in `connect_on` are: ${toString(colnames(connection$connect_on))}. Identifiers are: ${toString(identifier_cols)}."))
                     }
 
                 }
@@ -198,7 +198,7 @@ check_sensible_connections <- function(connection, layers) {
 check_drug_target <- function(drug_target_interactions) {
     #' @title [INTERNAL] Check drug target interaction data
     #'
-    #' @description [INTERNAL] Checks if the data used to define interaction between drugs and
+    #' @description [INTERNAL] Checks if the data used to define the interaction between drugs and
     #' targets is valid and formatted correctly.
     #'
     #' @param drug_target_interactions [list] A named list of the drug interaction data. Created by
@@ -207,23 +207,23 @@ check_drug_target <- function(drug_target_interactions) {
     #' @return Character string vector containing error messages.
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
 
     errors <- c()
     
     ### check if argument passed to 'match_on' is in column names of 'interaction_table'
     if(!drug_target_interactions$match_on %in% colnames(drug_target_interactions$interaction_table)) {
-        errors <- c(errors, stringr::str_interp("Drug-target interaction: The column name specified in `match_on` cannot be found in the column names of the data frame supplied in `interaction_table`. Argument `match_on` is set to: ${drug_target_interactions$match_on}. Column names in `interaction_table` are: ${toString(colnames(drug_target_interactions$interaction_table))}."))
+        errors <- c(errors, stringr::str_interp("Drug-target interaction: The column name specified in `match_on` cannot be found in the column names of the dataframe supplied in `interaction_table`. Argument `match_on` is set to: ${drug_target_interactions$match_on}. Column names in `interaction_table` are: ${toString(colnames(drug_target_interactions$interaction_table))}."))
     }
     
     ### check if 'drug_name' is in column names of 'interaction_table'
     if(!'drug_name' %in% colnames(drug_target_interactions$interaction_table)) {
-      errors <- c(errors, stringr::str_interp("Drug-target interaction: The column name 'drug_name' is requiered but not found in the column names of the data frame supplied in `interaction_table`. Column names in `interaction_table` are: ${toString(colnames(drug_target_interactions$interaction_table))}."))
+      errors <- c(errors, stringr::str_interp("Drug-target interaction: The column name 'drug_name' is required but not found in the column names of the dataframe supplied in `interaction_table`. Column names in `interaction_table` are: ${toString(colnames(drug_target_interactions$interaction_table))}."))
     }
     
     ### check if duplicate entries are given in the table passed to 'interaction_table'
     if (sum(duplicated(drug_target_interactions$interaction_table))>0){
-      errors <- c(errors, stringr::str_interp("Drug-target interaction: Duplicate entries found in the data frame specified in `interaction_table`. This may cause ERRORS!"))
+      errors <- c(errors, stringr::str_interp("Drug-target interaction: Duplicate entries found in the dataframe specified in `interaction_table`. This may cause ERRORS!"))
     }
 
     return(errors)
@@ -232,7 +232,7 @@ check_drug_target <- function(drug_target_interactions) {
 check_drug_targets_in_layers <- function(drug_target_interactions, layers) {
     #' @title [INTERNAL] Check drug target and layer data
     #'
-    #' @description [INTERNAL] Checks if the parameters supplied in 'drug_target_interactions' makes
+    #' @description [INTERNAL] Checks if the parameters supplied in 'drug_target_interactions' make
     #' sense in the context of the defined layers.
     #' 
     #' @param drug_target_interactions [list] A named list of the drug interaction data. Created by
@@ -243,7 +243,7 @@ check_drug_targets_in_layers <- function(drug_target_interactions, layers) {
     #' @return Character string vector containing error messages.
     #' 
     #' @keywords internal
-    #' @export
+    #' @noRd
     
     layer_names <- c()
     for (layer in layers) {
@@ -253,7 +253,7 @@ check_drug_targets_in_layers <- function(drug_target_interactions, layers) {
     errors <- c()
 
     if (!drug_target_interactions$target_molecules %in% layer_names) {
-        errors <- c(errors, stringr::str_interp("Drug-target interaction: The defined target molecules was not found in the list of layers. Targets molecules are set to: ${drug_target_interactions$target_molecules}. Layers are: ${toString(layer_names)}."))
+        errors <- c(errors, stringr::str_interp("Drug-target interaction: The defined target molecules was not found in the list of layers. Target molecules are set to: ${drug_target_interactions$target_molecules}. Layers are: ${toString(layer_names)}."))
     } else {
       
         for (group in c("groupA", "groupB")) {
@@ -275,7 +275,7 @@ check_input <- function(layers, inter_layer_connections, drug_target_interaction
     #' @title Check pipeline input data for required format
     #'
     #' @description Checks if input data is valid and formatted correctly. This function is a
-    #' wrapper for other check functions to be executed as first step of the DrDimont pipeline.
+    #' wrapper for other check functions to be executed as the first step of the DrDimont pipeline.
     #'
     #' @param layers [list] List of layers to check. Individual layers were created by
     #' \code{\link[DrDimont]{make_layer}} and need to be wrapped in a list.

@@ -31,7 +31,7 @@ initialized by \code{\link[DrDimont]{drdimont_settings}}. Items in the named lis
 adjusted as desired.}
 }
 \value{
-Data frame containing drug name and associated differential integrated drug response score.
+Dataframe containing drug name and associated differential integrated drug response score.
 If Python is not installed or the interaction score computation fails for some other reason, NULL
 is returned instead.
 }
@@ -54,7 +54,7 @@ information on how the pipeline is proceeding. Calculation of the interaction sc
 \code{\link[DrDimont]{generate_interaction_score_graphs}} requires saving large-scale graphs to file and calling
 a Python script. This handover may take time.
 
-Eventually a data frame is returned containing the supplied drug name and its associated
+Eventually a dataframe is returned containing the supplied drug name and its associated
 differential drug response score computed by DrDimont.
 }
 \examples{

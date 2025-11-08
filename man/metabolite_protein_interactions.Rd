@@ -5,7 +5,7 @@
 \alias{metabolite_protein_interactions}
 \title{Metabolite protein interaction data}
 \format{
-A data frame with 3 columns.
+A dataframe with 3 columns.
 \describe{
   \item{pubchem_id}{Pubchem IDs defining interacting metabolites}
   \item{gene_name}{gene names defining interacting proteins}
@@ -13,7 +13,7 @@ A data frame with 3 columns.
 }
 }
 \source{
-STITCH DB: \url{http://stitch.embl.de/}
+STITCH DB: \url{https://stitch-db.org/}
 
 Pubchem IDs: \url{https://pubchem.ncbi.nlm.nih.gov}
 
@@ -23,7 +23,7 @@ STRING DB: \url{https://string-db.org/}
 metabolite_protein_interactions
 }
 \description{
-Data frame providing interactions of metabolites and proteins. The data was taken
+Dataframe providing interactions of metabolites and proteins. The data was taken
 from the STITCH Database.
 }
 \keyword{datasets}

@@ -11,7 +11,7 @@ generate_interaction_score_graphs(graphs, drug_target_edgelists, settings)
 of each group as iGraph object (`graphs` from output of \code{\link[DrDimont]{generate_combined_graphs}})}
 
 \item{drug_target_edgelists}{[list] A named list (elements `groupA` and `groupB`). Each element
-contains the list of edges adjacent to drug targets as a data frame (columns `from`, `to` and
+contains the list of edges adjacent to drug targets as a dataframe (columns `from`, `to` and
 `weight`). `edgelists` from output of \code{\link[DrDimont]{determine_drug_targets}}}
 
 \item{settings}{[list] A named list containing pipeline settings. The settings list has to be
@@ -32,7 +32,7 @@ ATTENTION: Data exchange via files is mandatory and takes a long time for large 
 score computation is expensive and slow because it involves finding all simple paths up to a
 certain length between source and target node of the drug target edges. Don't set the parameter `max_path_length`
 in \code{\link[DrDimont]{drdimont_settings}} to a large value and only consider this step if your graphs have approximately
-2 million edges or less. Computation is initiated by \code{\link[DrDimont]{calculate_interaction_score}}.
+2 million edges or less. 
 The Python script is parallelized using Ray. Use the \code{\link[DrDimont]{drdimont_settings}} parameter `int_score_mode` to force sequential
 or parallel computation. Refer to the Ray documentation if you encounter problems with running
 the Python script in parallel. DISCLAIMER: Depending on the operating system Python comes

@@ -5,7 +5,7 @@
 \alias{drug_response_scores_example}
 \title{Drug response score}
 \format{
-Data frame with two columns
+Dataframe with two columns
 \describe{
   \item{drug_name}{Names of drugs}
   \item{drug_response_scores}{Associated differential drug response scores}
@@ -15,13 +15,13 @@ Data frame with two columns
 Krug, Karsten et al. “Proteogenomic Landscape of Breast Cancer Tumorigenesis and Targeted
  Therapy.” Cell vol. 183,5 (2020): 1436-1456.e31. doi:10.1016/j.cell.2020.10.036
 
-The Drug Gene Interaction Database: \url{https://www.dgidb.org/}
+The Drug Gene Interaction Database: \url{https://dgidb.org/}
 }
 \usage{
 drug_response_scores_example
 }
 \description{
-Exemplary final pipeline output: Drug response score data frame. This contains drugs and the
+Exemplary final pipeline output: Drug response score dataframe. This contains drugs and the
 calculated differential drug response score. The score was calculated by
 \code{\link[DrDimont]{compute_drug_response_scores}} using
 \link[DrDimont]{differential_graph_example}, \link[DrDimont]{drug_target_edges_example} and
@@ -33,7 +33,7 @@ calculated differential drug response score. The score was calculated by
 
 A subset of the original data by Krug et al. (2020) and randomly sampled metabolite
 data from \code{\link[DrDimont]{layers_example}} was used to generate the correlation
-matrices, individual graphs and combined graphs, interaction score graphs and differential
+matrices, individual graphs, combined graphs, interaction score graphs, and differential
 score graph. They were created from data stratified by estrogen receptor (ER) status:
 `groupA` contains data of ER+ patients and `groupB` of ER- patients. Drug-gene
 interactions were used from The Drug Gene Interaction Database.

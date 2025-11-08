@@ -18,7 +18,7 @@ the protein layer (see \code{\link[DrDimont]{make_layer}}), this column should b
 `ncbi_id` and contain the corresponding IDs of protein-drug targets. Any other ID present in
 the constructed layer could also be used.}
 
-\item{match_on}{[string] Column name of the data frame supplied in `interaction_table` that is used for
+\item{match_on}{[string] Column name of the dataframe supplied in `interaction_table` that is used for
 matching drugs and target nodes in the graph (e.g. `ncbi_id`).}
 }
 \value{

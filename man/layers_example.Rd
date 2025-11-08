@@ -11,7 +11,7 @@ contains `data` and `identifiers`. The structure for one individual layer:
   \item{groupA}{Data associated with `groupA`}
   \describe{
   \item{data}{Raw data. Components (e.g. genes or proteins) in columns, samples in rows}
-  \item{identifiers}{Data frame containing one column per ID}
+  \item{identifiers}{Dataframe containing one column per ID}
   }
   \item{groupB}{Data associated with `groupB`}
   \describe{
@@ -23,7 +23,7 @@ contains `data` and `identifiers`. The structure for one individual layer:
 }
 \source{
 Terunuma, Atsushi et al. “MYC-driven accumulation of 2-hydroxyglutarate
-is associated with breast cancer prognosis.” The Journal of clinical investigation
+is associated with breast cancer prognosis.” The Journal of Clinical Investigation
 vol. 124,1 (2014): 398-412. doi:10.1172/JCI71180
 
 Krug, Karsten et al. “Proteogenomic Landscape of Breast Cancer Tumorigenesis
@@ -39,12 +39,12 @@ Exemplary intermediate pipeline output containing a correctly formatted layers l
 List containing four layer items created by \code{\link[DrDimont]{make_layer}}.
 Each layer contains `data` and `identifiers` stratified by group and a `name`
 element giving the layer name. The data contained in this example refers to mRNA,
-protein, phosphosite and metabolite layers. The mRNA, protein and phosphosite
-data was adapted and reduced from Krug et al. (2020) containing data from the
+protein, phosphosite, and metabolite layers. The mRNA, protein, and phosphosite
+data was adapted and reduced from Krug et al. (2020), containing data from the
 Clinical Proteomic Tumor Analysis Consortium (CPTAC). The metabolite data was
 sampled randomly to generate distributions similar to those reported, e.g., in
 Terunuma et al. (2014). The `data` elements contain the raw data with samples as columns
-and molecular entities as rows. The `identifiers` elements contain layer specific identifiers
+and molecular entities as rows. The `identifiers` elements contain layer-specific identifiers
 for the molecular entities, e.g, gene_name.
 }
 \keyword{datasets}
