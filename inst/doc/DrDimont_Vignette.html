@@ -12,7 +12,7 @@
 
 <meta name="author" content="Katharina Baum, Pauline Hiort, Julian Hugo, Spoorthi Kashyap, Nataniel Mueller, and Justus Zeinert" />
 
-<meta name="date" content="2025-11-07" />
+<meta name="date" content="2026-07-21" />
 
 <title>DrDimont: Drug Response Prediction from Differential Multi-Omics Networks</title>
 
@@ -343,7 +343,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 Differential Multi-Omics Networks</h1>
 <h4 class="author">Katharina Baum, Pauline Hiort, Julian Hugo, Spoorthi
 Kashyap, Nataniel Mueller, and Justus Zeinert</h4>
-<h4 class="date">2025-11-07</h4>
+<h4 class="date">2026-07-21</h4>
 
 
 
@@ -365,15 +365,9 @@ different characteristics.</p>
 <h2>Installation</h2>
 <p>The R package <code>DrDimont</code> can be installed via CRAN. The R
 dependencies of DrDimont will also be installed. The complete source
-code is available at <a href="https://gitlab.com/PHiort/DrDimont" class="uri">https://gitlab.com/PHiort/DrDimont</a>.</p>
+code is available at <a href="https://github.com/DILiS-lab/DrDimont" class="uri">https://github.com/DILiS-lab/DrDimont</a>.</p>
 <p>You can install the package from CRAN with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="do">### please also install these dependencies of WGCNA (used in DrDimont) explicitly if not already installed</span></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&#39;BiocManager&#39;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    <span class="fu">install.packages</span>(<span class="st">&#39;BiocManager&#39;</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="fu">c</span>(<span class="st">&#39;GO.db&#39;</span>, <span class="st">&#39;preprocessCore&#39;</span>, <span class="st">&#39;impute&#39;</span>))</span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;DrDimont&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;DrDimont&#39;</span>)</span></code></pre></div>
 <p>After installation, you can load the package into your session
 with:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(DrDimont)</span></code></pre></div>
@@ -426,9 +420,9 @@ a virtual or conda environment with the name <code>r-DrDimont</code>,
 otherwise, the execution of the Python script will not work.</p>
 <p>A text file (<code>requirments_pip.txt</code> or
 <code>requirements_conda.txt</code>) with all required packages can also
-be downloaded from gitlab in the <code>inst/</code> directory or you can
-find them in your R package directory folder in the
-<code>DrDimont/</code> folder.</p>
+be downloaded from github (<a href="https://github.com/DILiS-lab/DrDimont" class="uri">https://github.com/DILiS-lab/DrDimont</a>) in the
+<code>inst/</code> directory or you can find them in your R package
+directory folder in the <code>DrDimont/</code> folder.</p>
 </div>
 </div>
 <div id="example-data-set-description" class="section level2">
@@ -571,8 +565,8 @@ can set the parameters <code>data_groupB=NULL</code> and
 <span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>                         <span class="at">data_groupB=</span>mrna_data<span class="sc">$</span>groupB[,<span class="sc">-</span><span class="dv">1</span>],</span>
 <span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>                         <span class="at">identifiers_groupA=</span><span class="fu">data.frame</span>(<span class="at">gene_name=</span>mrna_data<span class="sc">$</span>groupA<span class="sc">$</span>gene_name),</span>
 <span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>                         <span class="at">identifiers_groupB=</span><span class="fu">data.frame</span>(<span class="at">gene_name=</span>mrna_data<span class="sc">$</span>groupB<span class="sc">$</span>gene_name))</span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;mrna&quot;, group &quot;groupA&quot; contains 78 samples and 50 genes/proteins/entities.</span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;mrna&quot;, group &quot;groupB&quot; contains 34 samples and 50 genes/proteins/entities.</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;mrna&quot;, group &quot;groupA&quot; contains 78 samples and 50 genes/proteins/entities.</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;mrna&quot;, group &quot;groupB&quot; contains 34 samples and 50 genes/proteins/entities.</span></span>
 <span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a></span>
 <span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>protein_layer <span class="ot">&lt;-</span> <span class="fu">make_layer</span>(<span class="at">name=</span><span class="st">&quot;protein&quot;</span>,</span>
 <span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>                            <span class="at">data_groupA=</span>protein_data<span class="sc">$</span>groupA[, <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">2</span>)],</span>
@@ -581,24 +575,24 @@ can set the parameters <code>data_groupB=NULL</code> and
 <span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>                                <span class="at">ref_seq=</span>protein_data<span class="sc">$</span>groupA<span class="sc">$</span>ref_seq),</span>
 <span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>                            <span class="at">identifiers_groupB=</span><span class="fu">data.frame</span>(<span class="at">gene_name=</span>protein_data<span class="sc">$</span>groupB<span class="sc">$</span>gene_name, </span>
 <span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a>                                <span class="at">ref_seq=</span>protein_data<span class="sc">$</span>groupB<span class="sc">$</span>ref_seq))</span>
-<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;protein&quot;, group &quot;groupA&quot; contains 78 samples and 53 genes/proteins/entities.</span></span>
-<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;protein&quot;, group &quot;groupB&quot; contains 34 samples and 53 genes/proteins/entities.</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;protein&quot;, group &quot;groupA&quot; contains 78 samples and 53 genes/proteins/entities.</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;protein&quot;, group &quot;groupB&quot; contains 34 samples and 53 genes/proteins/entities.</span></span>
 <span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a></span>
 <span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a>phosphosite_layer <span class="ot">&lt;-</span> <span class="fu">make_layer</span>(<span class="at">name=</span><span class="st">&quot;phosphosite&quot;</span>,</span>
 <span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a>                                <span class="at">data_groupA=</span>phosphosite_data<span class="sc">$</span>groupA[, <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="dv">3</span>)],</span>
 <span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a>                                <span class="at">data_groupB=</span>phosphosite_data<span class="sc">$</span>groupB[, <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="dv">3</span>)],</span>
 <span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a>                                <span class="at">identifiers_groupA=</span><span class="fu">data.frame</span>(phosphosite_data<span class="sc">$</span>groupA[, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]),</span>
 <span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a>                                <span class="at">identifiers_groupB=</span><span class="fu">data.frame</span>(phosphosite_data<span class="sc">$</span>groupB[, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]))</span>
-<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;phosphosite&quot;, group &quot;groupA&quot; contains 78 samples and 61 genes/proteins/entities.</span></span>
-<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;phosphosite&quot;, group &quot;groupB&quot; contains 34 samples and 65 genes/proteins/entities.</span></span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;phosphosite&quot;, group &quot;groupA&quot; contains 78 samples and 61 genes/proteins/entities.</span></span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;phosphosite&quot;, group &quot;groupB&quot; contains 34 samples and 65 genes/proteins/entities.</span></span>
 <span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a></span>
 <span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a>metabolite_layer <span class="ot">&lt;-</span> <span class="fu">make_layer</span>(<span class="at">name=</span><span class="st">&quot;metabolite&quot;</span>,</span>
 <span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a>                               <span class="at">data_groupA=</span>metabolite_data<span class="sc">$</span>groupA[, <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="dv">3</span>)],</span>
 <span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a>                               <span class="at">data_groupB=</span>metabolite_data<span class="sc">$</span>groupB[, <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="dv">3</span>)],</span>
 <span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a>                               <span class="at">identifiers_groupA=</span><span class="fu">data.frame</span>(metabolite_data<span class="sc">$</span>groupA[, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]),</span>
 <span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a>                               <span class="at">identifiers_groupB=</span><span class="fu">data.frame</span>(metabolite_data<span class="sc">$</span>groupB[, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]))</span>
-<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;metabolite&quot;, group &quot;groupA&quot; contains 33 samples and 50 genes/proteins/entities.</span></span>
-<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;metabolite&quot;, group &quot;groupB&quot; contains 34 samples and 49 genes/proteins/entities.</span></span></code></pre></div>
+<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;metabolite&quot;, group &quot;groupA&quot; contains 33 samples and 50 genes/proteins/entities.</span></span>
+<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;metabolite&quot;, group &quot;groupB&quot; contains 34 samples and 49 genes/proteins/entities.</span></span></code></pre></div>
 <p>Run the code below to create a list of all individual layers for the
 pipeline input:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>all_layers <span class="ot">&lt;-</span> <span class="fu">list</span>(mrna_layer, protein_layer, phosphosite_layer, metabolite_layer)</span></code></pre></div>
@@ -711,16 +705,16 @@ below checks for various possible input formatting and connection errors
 and reports registered data set sizes (samples, entities) for the user
 to compare with the intended input.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">return_errors</span>(<span class="fu">check_input</span>(<span class="at">layers=</span>all_layers, </span>
-<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>                          <span class="at">inter_layer_connections=</span>all_inter_layer_connections, </span>
-<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>                          <span class="at">drug_target_interactions=</span>all_drug_target_interactions))</span>
-<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;mrna&quot;, group &quot;groupA&quot; contains 78 samples and 50 genes/proteins/entities.</span></span>
-<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;mrna&quot;, group &quot;groupB&quot; contains 34 samples and 50 genes/proteins/entities.</span></span>
-<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;protein&quot;, group &quot;groupA&quot; contains 78 samples and 53 genes/proteins/entities.</span></span>
-<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;protein&quot;, group &quot;groupB&quot; contains 34 samples and 53 genes/proteins/entities.</span></span>
-<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;phosphosite&quot;, group &quot;groupA&quot; contains 78 samples and 61 genes/proteins/entities.</span></span>
-<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;phosphosite&quot;, group &quot;groupB&quot; contains 34 samples and 65 genes/proteins/entities.</span></span>
-<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;metabolite&quot;, group &quot;groupA&quot; contains 33 samples and 50 genes/proteins/entities.</span></span>
-<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a><span class="co">#&gt; [25-11-07 13:42:46] Layer &quot;metabolite&quot;, group &quot;groupB&quot; contains 34 samples and 49 genes/proteins/entities.</span></span></code></pre></div>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>    <span class="at">inter_layer_connections=</span>all_inter_layer_connections, </span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>    <span class="at">drug_target_interactions=</span>all_drug_target_interactions))</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;mrna&quot;, group &quot;groupA&quot; contains 78 samples and 50 genes/proteins/entities.</span></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;mrna&quot;, group &quot;groupB&quot; contains 34 samples and 50 genes/proteins/entities.</span></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;protein&quot;, group &quot;groupA&quot; contains 78 samples and 53 genes/proteins/entities.</span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;protein&quot;, group &quot;groupB&quot; contains 34 samples and 53 genes/proteins/entities.</span></span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;phosphosite&quot;, group &quot;groupA&quot; contains 78 samples and 61 genes/proteins/entities.</span></span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;phosphosite&quot;, group &quot;groupB&quot; contains 34 samples and 65 genes/proteins/entities.</span></span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;metabolite&quot;, group &quot;groupA&quot; contains 33 samples and 50 genes/proteins/entities.</span></span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a><span class="co">#&gt; [26-07-21 16:23:29] Layer &quot;metabolite&quot;, group &quot;groupB&quot; contains 34 samples and 49 genes/proteins/entities.</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -786,14 +780,13 @@ parameters.</p>
 <span id="cb18-27"><a href="#cb18-27" tabindex="-1"></a>                        <span class="at">absolute_difference=</span><span class="cn">FALSE</span></span>
 <span id="cb18-28"><a href="#cb18-28" tabindex="-1"></a>                        )</span>
 <span id="cb18-29"><a href="#cb18-29" tabindex="-1"></a><span class="co"># to disable multi-threading for example run: (not recommended for actual data processing)</span></span>
-<span id="cb18-30"><a href="#cb18-30" tabindex="-1"></a>WGCNA<span class="sc">::</span><span class="fu">disableWGCNAThreads</span>()</span>
-<span id="cb18-31"><a href="#cb18-31" tabindex="-1"></a><span class="co">#&gt; </span></span></code></pre></div>
+<span id="cb18-30"><a href="#cb18-30" tabindex="-1"></a>WGCNA<span class="sc">::</span><span class="fu">disableWGCNAThreads</span>()</span></code></pre></div>
 <p>To run the entire pipeline from beginning-to-end the
 <code>run_pipeline()</code> function can be used:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">run_pipeline</span>(<span class="at">layers=</span>all_layers, </span>
-<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>             <span class="at">inter_layer_connections=</span>all_inter_layer_connections, </span>
-<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>             <span class="at">drug_target_interactions=</span>all_drug_target_interactions, </span>
-<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>             <span class="at">settings=</span>example_settings)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>example_drug_response_scores <span class="ot">&lt;-</span> <span class="fu">run_pipeline</span>(<span class="at">layers=</span>all_layers, </span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>                                    <span class="at">inter_layer_connections=</span>all_inter_layer_connections, </span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>                                    <span class="at">drug_target_interactions=</span>all_drug_target_interactions, </span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>                                    <span class="at">settings=</span>example_settings)</span></code></pre></div>
 </div>
 <div id="run-the-individual-pipeline-steps" class="section level2">
 <h2>Run the individual pipeline steps</h2>
@@ -1090,7 +1083,7 @@ prediction from differential analysis of multi-omics networks.
 <i>Bioinformatics</i>, 38:ii113-ii119. <a href="https://doi.org/10.1093/bioinformatics/btac477" class="uri">https://doi.org/10.1093/bioinformatics/btac477</a></li>
 </ul>
 <p>The package <code>DrDimont</code> is an updated version of the
-previously published <code>molnet</code> package (<a href="https://github.com/molnet-org/molnet" class="uri">https://github.com/molnet-org/molnet</a>)</p>
+previously published <code>molnet</code> package (<a href="https://github.com/molnet-org/molnet" class="uri">https://github.com/molnet-org/molnet</a>).</p>
 </div>
 
 

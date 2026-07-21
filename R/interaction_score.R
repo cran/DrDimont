@@ -21,9 +21,8 @@ write_interaction_score_input <- function(combined_graphs, drug_target_edgelists
     for(group in c("groupA", "groupB")) {
 
         if (is.null(combined_graphs[[group]])){next}
-
-        igraph::write_graph(combined_graphs[[group]], paste0(saving_path,"/", "combined_graph_", group, ".gml"), "gml")
-        readr::write_tsv(drug_target_edgelists[[group]], paste0(saving_path,"/", "drug_target_edgelist_", group, ".tsv"))
+        igraph::write_graph(graph=combined_graphs[[group]], file=paste0(saving_path,"/", "combined_graph_", group, ".gml"), format="gml", id=seq_len(igraph::vcount(combined_graphs[[group]])))
+        readr::write_tsv(drug_target_edgelists[[group]], file=paste0(saving_path,"/", "drug_target_edgelist_", group, ".tsv"))
     }
 }
 
@@ -99,11 +98,12 @@ calculate_interaction_score <- function(max_path_length,
     } else {
         python_executable=reticulate::virtualenv_python(envname="r-DrDimont")
     }
+
     res <- system2(python_executable, args = c(py_script,
-                                               graph_file_groupA,
-                                               edgelist_file_groupA,
+                                               shQuote(graph_file_groupA),
+                                               shQuote(edgelist_file_groupA),
                                                max_path_length,
-                                               "--output", paste0(saving_path, "/int_score_graph_groupA.gml"),
+                                               "--output", shQuote(paste0(saving_path, "/int_score_graph_groupA.gml")),
                                                "--num_cpus", num_cpus,
                                                "--cluster_address", cluster_address,
                                                ifelse(use_ray[1], "--distributed", "")))
@@ -112,14 +112,13 @@ calculate_interaction_score <- function(max_path_length,
 
     if (!graphB_null){
         res <- system2(python_executable, args = c(py_script,
-                                                   graph_file_groupB,
-                                                   edgelist_file_groupB,
+                                                   shQuote(graph_file_groupB),
+                                                   shQuote(edgelist_file_groupB),
                                                    max_path_length,
-                                                   "--output", paste0(saving_path, "/int_score_graph_groupB.gml"),
+                                                   "--output", shQuote(paste0(saving_path, "/int_score_graph_groupB.gml")),
                                                    "--num_cpus", num_cpus,
                                                    "--cluster_address", cluster_address,
-                                                   ifelse(use_ray[2], "--distributed", "")
-        ))
+                                                   ifelse(use_ray[2], "--distributed", "")))
         if (res == 0) {message(format(Sys.time(), "[%y-%m-%d %X] "), "Computation of interaction scores for groupB was successful!")}
     } else {message(format(Sys.time(), "[%y-%m-%d %X] "), "Skipping computation of interaction scores for groupB!")}
 
@@ -151,7 +150,7 @@ load_interaction_score_output <- function(saving_path, graphB_null) {
             message(format(Sys.time(), "[%y-%m-%d %X] "), group, "skipped. ")
             next
         }
-        graphs[[group]] <- igraph::read.graph(paste0(saving_path, "/int_score_graph_", group, ".gml"), format = "gml")
+        graphs[[group]] <- igraph::delete_vertex_attr(igraph::read.graph(paste0(saving_path, "/int_score_graph_", group, ".gml"), format = "gml"), "id")
         gc()
         message(format(Sys.time(), "[%y-%m-%d %X] "), group," done.")
     }

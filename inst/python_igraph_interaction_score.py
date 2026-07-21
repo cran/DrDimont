@@ -23,7 +23,7 @@ def single_edge_interaction_score(max_path_length: int, graph: igraph.Graph, edg
     """
     sums_of_weight_products = [0] * max_path_length
     num_paths = [0] * max_path_length
-    simple_paths = graph.get_all_simple_paths(edge[0], edge[1], cutoff=max_path_length)
+    simple_paths = graph.get_all_simple_paths(v=edge[0], to=edge[1], minlen=0, maxlen=max_path_length, mode='all')
     for path in simple_paths:
         path_length = len(path) - 1
         sums_of_weight_products[path_length - 1] += np.prod([graph.es.find(_source=path[i], _target=path[i+1])["weight"] for i in range(path_length)])
@@ -108,6 +108,15 @@ def main():
     parser.add_argument("--cluster_address", default="auto", help="address of ray cluster, if a cluster is used")
     parser.add_argument("--distributed", action="store_const", const=True, default=False, help="run in parallel with ray")
     args = parser.parse_args()
+
+    print("Running interaction score computation in Python with the following parameters:")
+    print(f"  Graph file: {args.graph_file}")
+    print(f"  Edge list file: {args.edge_list_file}")
+    print(f"  Maximum path length: {args.max_path_length}")
+    print(f"  Output file: {args.output}")
+    print(f"  Number of CPUs: {args.num_cpus}")
+    print(f"  Cluster address: {args.cluster_address}")
+    print(f"  Distributed: {args.distributed}")
 
     graph = igraph.read(args.graph_file, format="gml")
     max_path_length = int(args.max_path_length)

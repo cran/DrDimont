@@ -15,11 +15,11 @@ install_python_dependencies <- function(package_manager="pip") {
     
     if (package_manager=="pip") {
         reticulate::virtualenv_create("r-DrDimont")
-        reticulate::virtualenv_install(packages=list("numpy", "tqdm", "igraph", "ray"), envname="r-DrDimont", ignore_installed=TRUE)
+        reticulate::virtualenv_install(packages=list("numpy", "tqdm", "igraph>=1.0.0", "ray"), envname="r-DrDimont", ignore_installed=TRUE)
     }
     else if (package_manager=="conda") {
-        reticulate::conda_create("r-DrDimont", python_version=3.9, packages="pip")
-        reticulate::py_install(packages=list("numpy", "tqdm", "igraph", "ray"), envname="r-DrDimont", method="conda", pip=TRUE)
+        reticulate::conda_create("r-DrDimont", python_version=3.13, packages="pip")
+        reticulate::py_install(packages=list("numpy", "tqdm", "igraph>=1.0.0", "ray"), envname="r-DrDimont", method="conda", pip=TRUE)
     }
     else{
         stop(message(format(Sys.time(), "[%y-%m-%d %X] "), 
@@ -241,7 +241,7 @@ run_pipeline <- function(layers, inter_layer_connections, drug_target_interactio
     #'                         r_squared=list(default=0.65, metabolite=0.1),
     #'                         cut_vector=list(default=seq(0.2, 0.65, 0.01)))
     #'
-    #' \donttest{
+    #' \dontrun{
     #' run_pipeline(
     #'     layers=layers_example, 
     #'     inter_layer_connections=example_inter_layer_connections, 
@@ -822,7 +822,7 @@ generate_interaction_score_graphs <- function(graphs, drug_target_edgelists, set
     #' 
     #' example_settings <- drdimont_settings()
     #'
-    #' \donttest{
+    #' \dontrun{
     #' example_interaction_score_graphs <- generate_interaction_score_graphs(
     #'                                         graphs=combined_graphs_example$graphs,
     #'                                         drug_target_edgelists=drug_target_edges_example$edgelists,

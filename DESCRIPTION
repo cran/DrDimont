@@ -1,7 +1,7 @@
 Package: DrDimont
 Type: Package
 Title: Drug Response Prediction from Differential Multi-Omics Networks
-Version: 0.1.6
+Version: 0.1.7
 Authors@R: c(
   person("Katharina", "Baum", email = "katharina.baum@fu-berlin.de", role = "cre",
          comment = c(ORCID = "0000-0001-7256-0566")),
@@ -41,14 +41,15 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz
-RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Imports: igraph, dplyr, stringr, WGCNA, Rfast, readr, tibble, tidyr,
         magrittr, rlang, utils, stats, reticulate
-Suggests: GO.db, rmarkdown, knitr
+Suggests: rmarkdown, knitr
+biocViews:
 Depends: R (>= 3.5.0)
+Config/roxygen2/version: 8.0.0
 NeedsCompilation: no
-Packaged: 2025-11-07 12:42:52 UTC; phiort1
+Packaged: 2026-07-21 14:23:34 UTC; phiort1
 Author: Katharina Baum [cre] (ORCID: <https://orcid.org/0000-0001-7256-0566>),
   Pauline Hiort [aut] (ORCID: <https://orcid.org/0000-0002-3530-7358>),
   Julian Hugo [aut] (ORCID: <https://orcid.org/0000-0003-3355-1071>),
@@ -57,4 +58,4 @@ Author: Katharina Baum [cre] (ORCID: <https://orcid.org/0000-0001-7256-0566>),
   Justus Zeinert [aut] (ORCID: <https://orcid.org/0000-0003-3918-0507>)
 Maintainer: Katharina Baum <katharina.baum@fu-berlin.de>
 Repository: CRAN
-Date/Publication: 2025-11-08 13:00:02 UTC
+Date/Publication: 2026-07-21 22:40:16 UTC

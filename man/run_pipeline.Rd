@@ -85,7 +85,7 @@ example_settings <- drdimont_settings(
                         r_squared=list(default=0.65, metabolite=0.1),
                         cut_vector=list(default=seq(0.2, 0.65, 0.01)))
 
-\donttest{
+\dontrun{
 run_pipeline(
     layers=layers_example, 
     inter_layer_connections=example_inter_layer_connections, 

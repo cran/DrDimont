@@ -127,15 +127,15 @@ drdimont_settings <- function(
     ### check if python is installed, return an error if not
     if(settings$conda){
         tryCatch({reticulate::conda_python('r-DrDimont')},
-                 warning = function(e) {
-                     message(format(Sys.time(), "[%y-%m-%d %X] "), 
-                             "WARNING: Python executable in conda environment 'r-DrDimont' not found. Either run `install_python_dependencies(package_manager='conda') or set `conda=FALSE` in `drdimont_settings()` if pip installation was used.")
-                 }
+            warning = function(e) {
+                message(format(Sys.time(), "[%y-%m-%d %X] "),
+                        "WARNING: Python executable in conda environment 'r-DrDimont' not found. Either run `install_python_dependencies(package_manager='conda') or set `conda=FALSE` in `drdimont_settings()` if pip installation was used.")
+            }
         )
     }
     else{
         if(!reticulate::virtualenv_exists('r-DrDimont')) {
-            message(format(Sys.time(), "[%y-%m-%d %X] "), 
+            message(format(Sys.time(), "[%y-%m-%d %X] "),
                     "WARNING: Python executable in virtual environment 'r-DrDimont' not found. Either run `install_python_dependencies(package_manager='pip') or set `conda=TRUE` in `drdimont_settings()` if conda installation was used.")
         }
     }

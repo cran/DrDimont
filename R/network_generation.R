@@ -14,7 +14,7 @@ generate_reduced_graph <- function(adjacency_matrix,
     #' @description [INTERNAL] A wrapper functions that calls the functions to generate a network from
     #' correlation data and reduce the network by a given method. Correlation/adjacency matrices are
     #' computed in \code{\link[DrDimont]{compute_correlation_matrices}}. Graph generation uses
-    #' \code{\link[igraph]{graph.adjacency}} internally. Methods implemented are
+    #' \code{\link[igraph]{graph_from_adjacency_matrix}} internally. Methods implemented are
     #' \link[DrDimont]{network_reduction_by_p_value} (reduction by statistical significance of correlation)
     #' and \link[DrDimont]{network_reduction_by_pickHardThreshold} (using WGCNA function
     #' \link[WGCNA]{pickHardThreshold.fromSimilarity} that finds a suitable cutoff value to get a scale-free
@@ -86,7 +86,7 @@ generate_reduced_graph <- function(adjacency_matrix,
     colnames(reduced_adjacency_matrix) <- identifiers$node_id
 
     # generate iGraph object
-    graph <- igraph::graph.adjacency(adjmatrix=reduced_adjacency_matrix,
+    graph <- igraph::graph_from_adjacency_matrix(adjmatrix=reduced_adjacency_matrix,
                                      weighted=TRUE,
                                      diag=FALSE,
                                      mode='undirected')

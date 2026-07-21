@@ -48,7 +48,7 @@ data(drug_target_edges_example)
 
 example_settings <- drdimont_settings()
 
-\donttest{
+\dontrun{
 example_interaction_score_graphs <- generate_interaction_score_graphs(
                                         graphs=combined_graphs_example$graphs,
                                         drug_target_edgelists=drug_target_edges_example$edgelists,

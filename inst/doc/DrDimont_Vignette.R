@@ -5,12 +5,6 @@ knitr::opts_chunk$set(
 )
 
 ## ----Package installation, message=FALSE, warning=FALSE, eval=FALSE-----------
-# 
-# ### please also install these dependencies of WGCNA (used in DrDimont) explicitly if not already installed
-# if (!require('BiocManager', quietly = TRUE))
-#     install.packages('BiocManager')
-# BiocManager::install(c('GO.db', 'preprocessCore', 'impute'))
-# 
 # install.packages('DrDimont')
 
 ## ----Loading DrDimont, message=FALSE------------------------------------------
@@ -104,8 +98,8 @@ all_drug_target_interactions <- make_drug_target(
 
 ## ----Check for errors---------------------------------------------------------
 return_errors(check_input(layers=all_layers, 
-                          inter_layer_connections=all_inter_layer_connections, 
-                          drug_target_interactions=all_drug_target_interactions))
+    inter_layer_connections=all_inter_layer_connections, 
+    drug_target_interactions=all_drug_target_interactions))
 
 ## ----Settings-----------------------------------------------------------------
 example_settings <- drdimont_settings(
@@ -141,10 +135,10 @@ WGCNA::disableWGCNAThreads()
 
 
 ## ----Run pipeline, eval=FALSE-------------------------------------------------
-# run_pipeline(layers=all_layers,
-#              inter_layer_connections=all_inter_layer_connections,
-#              drug_target_interactions=all_drug_target_interactions,
-#              settings=example_settings)
+# example_drug_response_scores <- run_pipeline(layers=all_layers,
+#                                     inter_layer_connections=all_inter_layer_connections,
+#                                     drug_target_interactions=all_drug_target_interactions,
+#                                     settings=example_settings)
 
 ## ----Correlation matrices, message=FALSE, results='hide'----------------------
 reduced_mrna_layer <- make_layer(name="mrna",

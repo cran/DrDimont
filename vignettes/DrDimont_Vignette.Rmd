@@ -27,16 +27,10 @@ The main purpose of the DrDimont pipeline is to easily and efficiently generate,
 
 ## Installation
 
-The R package `DrDimont` can be installed via CRAN. The R dependencies of DrDimont will also be installed. The complete source code is available at https://gitlab.com/PHiort/DrDimont.
+The R package `DrDimont` can be installed via CRAN. The R dependencies of DrDimont will also be installed. The complete source code is available at https://github.com/DILiS-lab/DrDimont.
 
 You can install the package from CRAN with:
 ```{r Package installation, message=FALSE, warning=FALSE, eval=FALSE}
-
-### please also install these dependencies of WGCNA (used in DrDimont) explicitly if not already installed
-if (!require('BiocManager', quietly = TRUE))
-    install.packages('BiocManager')
-BiocManager::install(c('GO.db', 'preprocessCore', 'impute'))
-
 install.packages('DrDimont')
 ```
 
@@ -88,7 +82,7 @@ pip install --upgrade pip numpy tqdm igraph ray
 
  <b> ATTENTION </b>: The Python dependencies have to be installed into a virtual or conda environment with the name `r-DrDimont`, otherwise, the execution of the Python script will not work. 
 
-A text file (`requirments_pip.txt` or `requirements_conda.txt`) with all required packages can also be downloaded from gitlab in the `inst/` directory or you can find them in your R package directory folder in the `DrDimont/` folder.
+A text file (`requirments_pip.txt` or `requirements_conda.txt`) with all required packages can also be downloaded from github (https://github.com/DILiS-lab/DrDimont) in the `inst/` directory or you can find them in your R package directory folder in the `DrDimont/` folder.
 
 ## Example Data Set Description
 
@@ -245,8 +239,8 @@ When the input data structures of the individual layers, the inter-layer connect
 
 ```{r Check for errors}
 return_errors(check_input(layers=all_layers, 
-                          inter_layer_connections=all_inter_layer_connections, 
-                          drug_target_interactions=all_drug_target_interactions))
+    inter_layer_connections=all_inter_layer_connections, 
+    drug_target_interactions=all_drug_target_interactions))
 ```
 
 
@@ -298,10 +292,10 @@ WGCNA::disableWGCNAThreads()
 
 To run the entire pipeline from beginning-to-end the `run_pipeline()` function can be used:
 ```{r Run pipeline, eval=FALSE}
-run_pipeline(layers=all_layers, 
-             inter_layer_connections=all_inter_layer_connections, 
-             drug_target_interactions=all_drug_target_interactions, 
-             settings=example_settings)
+example_drug_response_scores <- run_pipeline(layers=all_layers, 
+                                    inter_layer_connections=all_inter_layer_connections, 
+                                    drug_target_interactions=all_drug_target_interactions, 
+                                    settings=example_settings)
 ```
 
 ## Run the individual pipeline steps
@@ -466,4 +460,4 @@ Full citation:
 
 * Hiort, P. et al. (2022) DrDimont: Explainable drug response prediction from differential analysis of multi-omics networks. <i>Bioinformatics</i>, 38:ii113-ii119. https://doi.org/10.1093/bioinformatics/btac477
 
-The package `DrDimont` is an updated version of the previously published `molnet` package (https://github.com/molnet-org/molnet)
+The package `DrDimont` is an updated version of the previously published `molnet` package (https://github.com/molnet-org/molnet).
